@@ -81,6 +81,7 @@ sunday/memory/sqlite_store.py
 sunday/memory/task_store.py
 sunday/memory/titans_memory.py
 sunday/memory/vector_store.py
+sunday/plugins/self_authored/__init__.py
 sunday/sidecar/focus_sentry.py
 sunday/sidecar/windows_sidecar.py
 sunday/tools/__init__.py

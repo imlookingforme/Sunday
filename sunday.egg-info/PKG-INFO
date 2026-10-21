@@ -24,7 +24,6 @@ Requires-Dist: icalendar>=5.0.0
 Requires-Dist: beautifulsoup4>=4.12.0
 Requires-Dist: requests>=2.31.0
 Requires-Dist: psutil>=5.9.0
-Requires-Dist: pywin32>=306
 Requires-Dist: watchdog>=3.0.0
 Requires-Dist: aiohttp>=3.9.0
 Provides-Extra: dev

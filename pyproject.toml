@@ -39,7 +39,7 @@ dependencies = [
     
     # System
     "psutil>=5.9.0",
-    "pywin32>=306",
+    
     "watchdog>=3.0.0",
     
     # Swarm & Networking
