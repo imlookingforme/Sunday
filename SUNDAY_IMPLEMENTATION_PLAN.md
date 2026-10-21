@@ -148,3 +148,41 @@ python -m sunday.daemon.pipeline --insomnia --dashboard --telegram
 **Expected Outcome:**
 1. The Sunday process (and FastAPI dashboard) should start automatically within 10 seconds of plugging in the drive.
 2. Check the host laptop's `C:\Users\<User>\.cache\huggingface` and `C:\Users\<User>\.ollama` directories. They must be completely empty or non-existent, confirming that all heavy weights are stored on the external drive.
+
+---
+
+## Development & Execution Roadmap
+
+The following roadmap synthesizes the features into an actionable, step-by-step implementation sequence:
+
+### Step 1: Local Environment & USB Foundation (Week 1)
+- **Task:** Create the `usb_listener.ps1` and `bootstrap_sunday.bat` scripts.
+- **Task:** Set up the isolated Python virtual environment on the 1TB drive.
+- **Verification:** Plug in the drive on the HP Pavilion; verify the environment activates automatically and no caches leak to the `C:\` drive.
+
+### Step 2: Core Intelligence & Token Pool (Week 2)
+- **Task:** Finalize the `TokenPool` implementation (fix missing dependencies like `keyring`).
+- **Task:** Implement the `FluidIntentEngine` routing logic to default to Cloud APIs (OpenAI/Anthropic).
+- **Task:** Integrate the fallback `Ollama` local LLM (e.g., `phi3:mini`) and ensure it runs within the 16GB RAM constraint without crashing.
+- **Verification:** Run a complex reasoning query (ensure Cloud API is used). Disconnect the internet and run a simple query (ensure Ollama fallback engages).
+
+### Step 3: Voice Pipeline & Biometrics (Week 3)
+- **Task:** Integrate `openWakeWord` and `piper-tts`.
+- **Task:** Implement speaker verification (e.g., using `speechbrain` or `pyannote.audio` CPU models).
+- **Verification:** Speak "Hey Sunday" to trigger the system. Have an unregistered voice speak it and verify rejection. Ensure TTS responds smoothly.
+
+### Step 4: Academic Tutor & IDE Controller (Week 4)
+- **Task:** Expand `UniversalController` to handle Cursor/VS Code switching.
+- **Task:** Implement `FocusSentry` to monitor active windows and trigger the 3-stage distraction escalation.
+- **Verification:** Start Senpai Mode. Open YouTube and verify Sunday automatically minimizes it after warning. Instruct Sunday to run a script in Cursor and verify it executes.
+
+### Step 5: Insomnia Engine & Sub-Agents (Week 5)
+- **Task:** Implement the `SetThreadExecutionState` Windows API call to keep the laptop awake.
+- **Task:** Develop the nightly background cron job for memory summarization.
+- **Task:** Build the `SubAgent` code execution sandbox.
+- **Verification:** Close the laptop lid. Verify the system stays alive via Telegram ping. Check logs the next morning to ensure the daily summarization job ran.
+
+### Step 6: Polish & Mobile Dashboard (Week 6)
+- **Task:** Finalize the FastAPI server and React/PWA dashboard.
+- **Task:** Setup Cloudflare Tunnels (or Tailscale) for secure remote access.
+- **Verification:** Open the web app on the phone using cellular data. Send a command and verify the laptop receives and processes it.
