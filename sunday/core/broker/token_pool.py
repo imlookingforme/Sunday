@@ -63,13 +63,14 @@ class TokenPool:
     get_key() / mark_exhausted() / rotate_key() APIs.
     """
 
-    def __init__(self):
+    def __init__(self, load_env: bool = False):
         # provider -> list of CredentialEntry
         self._pools: Dict[str, List[CredentialEntry]] = defaultdict(list)
         # provider -> current active index
         self._current_index: Dict[str, int] = defaultdict(int)
         self._lock = asyncio.Lock()
-        self._load_from_env()
+        if load_env:
+            self._load_from_env()
 
     def _load_from_env(self):
         """Load known API keys from environment variables or .env."""
