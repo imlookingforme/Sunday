@@ -1,49 +1,64 @@
-# ☀️ Sunday — Personal AI Operating System & Autonomous Swarm
+# 🌅 Sunday AI
 
-> *"Named after the day you finally get your life together. (Sunday will pretend you did.)"*
+> **A Voice-First, Cloud-Primary, Local-Zero-Footprint Personal AI Assistant tailored for HP Pavilion laptops.**
 
-**Sunday** is a voice-first, local-first, proactive personal AI operating system for Windows. It goes far beyond a chatbot with a mic — it is an always-on **daemon, background specialist swarm, and visual sidecar** that monitors your screen context, anticipates your workflow habits before you ask, manages your focus garden, controls external AI IDEs (Cursor, Antigravity, Devin), heals broken code autonomously, and speaks with you in real time with seamless barge-in interruption.
+Sunday is an autonomous, multi-agent AI companion designed to run seamlessly from an external 1TB portable hard drive (`SUNDAY_DRIVE`), leaving near-zero clutter on your laptop while delivering high-speed intelligence, academic tutoring, distraction mitigation, and remote phone connectivity.
 
 ---
 
-## ⚡ Quick Start: Running Sunday
+## ✨ Key Features
 
-### 1. Installation
-Ensure you have Python 3.11 or 3.12 installed on Windows:
-```powershell
-# Clone and navigate to Sunday
-cd Sunday
+- 🔌 **Plug & Play USB Auto-Trigger**:
+  - Insert your 1TB `SUNDAY_DRIVE`, and Sunday wakes up automatically via silent Windows background detection (`usb_listener.ps1`).
+  - Zero permanent footprint on host laptop; all memory stores, databases, and logs live on the external drive.
 
-# Install core development environment & dependencies
-pip install -e ".[dev]"
+- 🧠 **Dual-Tier Intelligence (Cloud-Primary / Local-Fallback)**:
+  - High-performance cloud intelligence (GPT-4o, Claude 3.5, Gemini 1.5) with automatic `TokenPool` API key failover on rate limits (429).
+  - Offline fallback support via Ollama (Phi-3).
+
+- 🎙️ **Voice First with Biometric Speaker Identification**:
+  - Continuous wake-word detection ("Hey Sunday", "Hey Jarvis").
+  - `BiometricVerifier` validates speaker identity before executing sensitive operations and tailors greetings.
+
+- 🎓 **Senpai Academic Tutor & Focus Sentry**:
+  - Socratic study tutor providing guiding questions and Pomodoro plans.
+  - 3-stage distraction escalation: verbal nudge -> toast warning -> auto-minimization & virtual Sakura tree wilting in the Forest garden.
+
+- 🤖 **Autonomous Sub-Agents & Swarm Specialists**:
+  - Spawns background scripts, monitors output, handles timeouts, and self-heals code issues.
+  - Core Swarm Specialists: `Conductor`, `Coder`, `Scout`, `Automator`, and `Gatekeeper`.
+
+- 📱 **Mobile Phone Link (Telegram Bot)**:
+  - Control your laptop remotely via Telegram.
+  - Send voice notes or text commands from anywhere; receive proactive notifications and study reminders.
+
+- 🌙 **24/7 Sentience & Nightly Self-Reflection**:
+  - Windows Insomnia AwayMode keeps background workers active with the laptop lid closed.
+  - `SentienceEngine` consolidates daily memories and generates self-improvement notes every night at 3:00 AM.
+
+---
+
+## 🚀 Quick Start Guide
+
+### 1. Drive Preparation
+1. Plug in your 1TB external hard drive.
+2. Open **This PC**, right-click the drive -> **Rename** / **Properties**, and set the label to:
+   ```
+   SUNDAY_DRIVE
+   ```
+3. Copy the Sunday codebase to the drive root.
+
+### 2. Configure Environment (.env)
+Copy `.env.example` to `.env` on your drive root:
+```bash
+cp .env.example .env
 ```
+Add your API keys (OpenAI, Anthropic, Gemini) and your Telegram Bot token.
 
-### 2. Pull Local Inference Model (Ollama)
-```powershell
-ollama pull llama3.1
-```
-
-### 3. Launching Modes
-
-```powershell
-# 🚀 1. Default Interactive Console (GenZ Swarm Conductor Voice/Text)
-python -m sunday.daemon.pipeline
-
-# 🧠 2. Full Intelligence Mode (Neural Fluid Intent + Proactive Habit Suggestions)
-python -m sunday.daemon.pipeline --fluid-intent --proactive-suggest
-
-# 🌐 3. Full Stack Daemon (3D Techno Orb Dashboard + Mobile PWA Sync)
-python -m sunday.daemon.pipeline --dashboard --mobile-sync
-
-# 🛡️ 4. Senpai Focus Sentry & Screen Awareness Sidecar
-python -m sunday.daemon.pipeline --sidecar
-
-# 🔋 5. 24/7 Insomnia Beast Mode (Lid-closed execution + Autonomous arXiv/News Scouting)
-python -m sunday.daemon.pipeline --insomnia --autonomous-scout
-
-# 👑 6. God Mode: All Features Enabled Concurrently
-python -m sunday.daemon.pipeline --dashboard --sidecar --mobile-sync --insomnia --autonomous-scout --fluid-intent --proactive-suggest
-```
+### 3. Auto-Trigger Setup (Plug & Play)
+To have Sunday automatically boot whenever you plug in the drive:
+1. Press `Win + R`, type `shell:startup`, and hit Enter.
+2. Create a shortcut to `sunday/usb_trigger/usb_listener.ps1` in this Startup folder.
 
 ---
 
@@ -59,165 +74,21 @@ When running in text mode, you have direct control via interactive slash command
 | `/tools` | **Tool Catalog** | Displays all 140+ enabled tools categorized by domain with risk classifications. |
 | `/help` | **Quick Help** | Interactive guide of available commands and shortcut keys. |
 
-### Mid-Flight Conversational Steering (Say it Naturally!)
+### Mid-Flight Conversational Steering
 Sunday's Live Steering Engine listens to natural voice corrections while running background tasks:
-- **Patch a running task**: *"Wait, also make it output JSON"* or *"Actually change the file name to main.py"* (steers background Coder/Automator without aborting context).
-- **Abort a task**: *"Cancel that"* or *"Stop working on that"* (instantly halts the specialist).
+- **Patch a running task**: *"Wait, also make it output JSON"* (steers background Coder/Automator without aborting context).
+- **Abort a task**: *"Cancel that"* (instantly halts the specialist).
 - **Status check**: *"What's the swarm doing right now?"* (returns real-time progress across all specialists).
-
----
-
-## 🌟 Major Features & Architecture
-
-```
-                                    SUNDAY CORE ARCHITECTURE
-                                    
-  [Webcam Gestures] ──┐
-  [Windows Screen]  ──┼──> [ SundayDaemon ] <──> [ 3D Techno Orb Dashboard / PWA ]
-  [Hey Sunday Wake] ──┘           │
-                                  ├──> [ SwarmBus (Priority Event Mesh) ]
-                                  │      ├── Conductor (Voice & Dialogue)
-                                  │      ├── Coder (Patch-Aware Engineering)
-                                  │      ├── Scout (Autonomous arXiv & Web)
-                                  │      ├── Automator (OS Shell & Actions)
-                                  │      └── Gatekeeper (Fail-Closed Broker)
-                                  │
-                                  ├──> [ World-Class Intelligence Engine ]
-                                  │      ├── HFModelLoader (Local HuggingFace)
-                                  │      ├── FluidIntentEngine (Zero-Shot + Embeddings)
-                                  │      ├── ContextDisambiguator (Titans Memory)
-                                  │      └── SuggestionEngine (Proactive Habit Nudges)
-                                  │
-                                  ├──> [ 24/7 Insomnia & Self-Healing ]
-                                  │      ├── Windows Kernel Execution State
-                                  │      ├── Tree-of-Thought Code Healer
-                                  │      └── Universal IDE Controller
-                                  │
-                                  └──> [ Academic Focus & Forest Engine ]
-                                         ├── Focus Sentry (3-Stage Escalation)
-                                         ├── SQLite Forest Garden Lifecycle
-                                         └── Claude Socratic Tutor
-```
-
----
-
-### 🧠 1. World-Class Intelligence & Fluid Intent (Phase 7)
-- **Local HuggingFace Engine (`HFModelLoader`)**: Zero-cloud dependency for intelligence. Runs `all-MiniLM-L6-v2` (embeddings), `bart-large-mnli` (zero-shot NLU), `bert-base-NER` (entity extraction), and `twitter-roberta` (sentiment).
-- **Fluid Semantic Understanding (`FluidIntentEngine`)**: Projects user meaning into high-dimensional space instead of parsing strict keywords. Understands *"I'm wiped out"* or *"kick off the build"* intuitively.
-- **Memory-Backed Disambiguation (`ContextDisambiguator`)**: Resolves ambiguous shorthand like *"run it"* or *"what about that"* by reviewing turn history and querying episodic memory.
-- **Pattern Learning & Proactive Habits (`PatternLearner` & `SuggestionEngine`)**: Learns your daily habits by time bucket and sequential history. Automatically crafts proactive suggestions (e.g., morning news briefings, post-task sprints).
-- **Sentiment & Mood Detection (`MoodDetector`)**: Detects frustration or urgency and automatically adjusts persona responses between playful GenZ banter and high-density, concise problem solving.
-
----
-
-### 🐝 2. Swarm Mesh & Live Steering (Phase 4)
-- **5 Autonomous Specialists**:
-  - `Conductor`: Voice-first liaison, conversational nudge injector, live-steering router.
-  - `Coder`: Code writing, patch-aware refactoring, and sandbox testing.
-  - `Scout`: Continuous arXiv research, tech newsletter parsing, and web queries.
-  - `Automator`: Shell scripts, batch workflows, and file management.
-  - `Gatekeeper`: Fail-closed security broker, approval gating, and token failover.
-- **Live Mid-Flight Task Steering**: Modify parameters or redirect tasks while workers are executing without losing state or aborting.
-- **Conversational Nudge Injection**: Specialists inject natural status updates directly into voice responses.
-
----
-
-### 🌙 3. 24/7 Insomnia Daemon & Universal Controller (Phase 6)
-- **Windows Kernel Insomnia Engine**: Uses Windows `SetThreadExecutionState` + `ES_AWAYMODE_REQUIRED` so Sunday stays awake and running tasks even when your laptop lid is shut, with automatic battery and thermal safety guards.
-- **Recursive Self-Healing Code Engine (`RecursiveSelfHealingEngine`)**: Uses a Tree-of-Thought (ToT) exploration sandbox to diagnose syntax and runtime errors, generate fixes, and test them recursively before throwing errors.
-- **Universal IDE Controller (`UniversalController`)**: Directly inspects, communicates with, and steers Cursor, Antigravity, Devin, Claude Desktop, and ChatGPT with automatic token arbitrage and rate-limit failovers.
-- **Autonomous Newsletter Scout**: Periodically pulls the latest AI papers from arXiv and tech feeds, digesting insights into Titans Memory.
-
----
-
-### 🌸 4. Senpai Academic Focus & Forest Garden (Phase 5)
-- **Sunday Senpai Mode**: Dedicated academic focus persona providing gentle accountability and deep explanations.
-- **Focus Sentry Distraction Interceptor**: Real-time window monitoring with 3-stage gradual escalation:
-  - *Stage 1*: Casual voice reminder.
-  - *Stage 2*: Direct audio/visual alert.
-  - *Stage 3*: Auto-minimizes offending distraction windows and wilts the current tree.
-- **Forest Engine**: SQLite-backed virtual focus garden. Complete 25-minute sprints to plant Cherry Blossoms, Redwoods, and Bamboo; sustained distractions wilt your tree.
-- **Claude Academic Tutor**: Socratic dialogue, lecture mode, and auto-generated practice question sets.
-- **Deadline Watcher**: Automatically parses your local `todo.md` deadlines and nudges you during idle periods.
-
----
-
-### 🎙️ 5. Voice Pipeline & Techno Orb GUI
-- **Wake Word Detection**: Local wake word (*"Hey Sunday"*) via `openWakeWord`.
-- **Speech-to-Text & TTS**: Whisper local STT + Piper TTS (with barge-in cancellation).
-- **Techno Orb 3D GUI**: Reactive Three.js GLSL shader orb that pulses with voice audio FFT and changes color according to the active persona:
-  - Cyan/Violet: Sunday Default
-  - Magenta/Neon Orange: GenZ
-  - Sakura Pink/Emerald: Senpai
-  - Stark Gold: JARVIS
-- **Mobile PWA & Telegram**: Remote control Sunday from your phone via QR code pairing or Telegram voice notes.
-
----
-
-## 📡 REST API & Web Endpoints
-
-When running with `--dashboard`, access the Swagger docs at `http://127.0.0.1:8000/docs`:
-
-### Intelligence & Habits
-- `GET /intelligence/status` — HuggingFace neural models, total events, and last suggestion.
-- `POST /intelligence/classify` — Classify query intent with confidence, extracted entities, and mood.
-- `GET /intelligence/patterns` — Retrieve mined usage patterns by time bucket.
-- `POST /intelligence/suggest` — Generate an immediate habit-aligned proactive suggestion.
-- `POST /intelligence/mood` — Analyze conversational tone, frustration, and recommended style.
-
-### Focus & Tutoring
-- `POST /forest/start` — Start a focus sprint (`duration_minutes`, `tree_species`, `tag`).
-- `GET /forest/status` — Live growth progress of the active tree.
-- `POST /forest/wilt` — Force wilt the current tree due to distraction.
-- `GET /deadlines` — Parsed deadline items from local `todo.md`.
-- `POST /tutor/explain` — Explain concepts in Socratic, Lecture, or Rapid mode.
-- `POST /tutor/questions` — Generate practice exam questions with rubrics.
-
-### Autonomy & Controller
-- `GET /insomnia/status` — 24/7 execution state, battery percentage, and AC power status.
-- `POST /insomnia/toggle` — Turn AwayMode lid-closed execution on or off.
-- `POST /authoring/tool` — Generate and register a new tool plugin at runtime.
-- `POST /debug/heal` — Recursively heal broken code in a Tree-of-Thought sandbox.
-- `GET /controller/status` — Active IDE connections (Cursor, Devin, Antigravity) and token pool health.
-
----
-
-## 🛠️ Complete CLI Flag Reference
-
-```powershell
-python -m sunday.daemon.pipeline [OPTIONS]
-
-Options:
-  --dashboard           Launch FastAPI web server & 3D Techno Orb dashboard (port 8000)
-  --sidecar             Launch Windows active window awareness & Focus Sentry
-  --telegram            Start Telegram bot daemon (requires TELEGRAM_BOT_TOKEN)
-  --mobile-sync         Enable Mobile PWA endpoints & local QR pairing (/mobile/)
-  --insomnia            Enable 24/7 lid-closed execution via Windows AwayMode API
-  --autonomous-scout    Enable continuous arXiv paper and tech news scouting
-  --fluid-intent        Enable local HuggingFace neural intent classification
-  --proactive-suggest   Enable habit pattern learner & autonomous suggestion loop
-  --log-level LEVEL     Log level: DEBUG, INFO, WARNING, ERROR (default: INFO)
-```
 
 ---
 
 ## 🧪 Testing & Verification
 
-Sunday includes a 100% passing test suite across all 7 development phases:
+Sunday includes a 100% passing test suite across all development phases:
 
 ```powershell
-# Run the entire test suite
+# Run the complete test suite
 pytest tests/ -v
-
-# Run Phase 7 Intelligence tests
-pytest tests/test_phase7_intelligence.py -v
-
-# Run Swarm Mesh tests
-pytest tests/test_swarm_mesh.py -v
-```
-
-```
-============================== 38 passed in 30.83s ==============================
 ```
 
 ---
@@ -225,4 +96,4 @@ pytest tests/test_swarm_mesh.py -v
 ## 📜 License & Author
 
 **Author**: Raghuram Vedantam & The Sunday Development Team  
-**License**: MIT License
+**License**: MIT License. See [LICENSE](LICENSE) for details.
