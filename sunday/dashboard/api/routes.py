@@ -478,3 +478,4 @@ async def trigger_proactive_suggestion(recent_intent: str | None = None):
 async def analyze_mood(req: MoodRequest):
     """Detect conversational mood and frustration for persona modulation."""
     return mood_detector.detect_mood(req.text)
+

@@ -71,7 +71,7 @@ Sunday's Live Steering Engine listens to natural voice corrections while running
 
 ```
                                     SUNDAY CORE ARCHITECTURE
-
+                                    
   [Webcam Gestures] ──┐
   [Windows Screen]  ──┼──> [ SundayDaemon ] <──> [ 3D Techno Orb Dashboard / PWA ]
   [Hey Sunday Wake] ──┘           │
@@ -224,5 +224,5 @@ pytest tests/test_swarm_mesh.py -v
 
 ## 📜 License & Author
 
-**Author**: Raghuram Vedantam & The Sunday Development Team
+**Author**: Raghuram Vedantam & The Sunday Development Team  
 **License**: MIT License

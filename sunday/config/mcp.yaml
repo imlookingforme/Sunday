@@ -124,31 +124,31 @@ secrets:
   github_token:
     description: "GitHub personal access token"
     required: false
-
+  
   notion_api_key:
     description: "Notion integration API key"
     required: false
-
+  
   gmail_access_token:
     description: "Gmail OAuth access token"
     required: false
-
+  
   gmail_refresh_token:
     description: "Gmail OAuth refresh token"
     required: false
-
+  
   microsoft_client_id:
     description: "Microsoft Graph client ID"
     required: false
-
+  
   microsoft_client_secret:
     description: "Microsoft Graph client secret"
     required: false
-
+  
   brave_api_key:
     description: "Brave Search API key"
     required: false
-
+  
   postgres_connection_string:
     description: "PostgreSQL connection string"
     required: false
@@ -158,21 +158,21 @@ secrets:
 tool_routing:
   filesystem:
     operator: "automation"
-
+  
   github:
     operator: "coding"
-
+  
   notion:
     operator: "automation"
-
+  
   google-workspace:
     operator: "automation"
-
+  
   microsoft-graph:
     operator: "automation"
-
+  
   brave-search:
     operator: "research"
-
+  
   postgres:
     operator: "automation"

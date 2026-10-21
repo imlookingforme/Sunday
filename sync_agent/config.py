@@ -14,7 +14,7 @@ class Config:
     def _load_config(self) -> Dict[str, Any]:
         if not self.config_path.exists():
             raise FileNotFoundError(f"Config file not found: {self.config_path}")
-
+        
         with open(self.config_path, 'r', encoding='utf-8') as f:
             return yaml.safe_load(f)
 
@@ -31,7 +31,7 @@ class Config:
             self.config['logging']['directory'],
             self.config['conflict']['directory']
         ]
-
+        
         for dir_name in directories:
             dir_path = base_dir / dir_name
             dir_path.mkdir(parents=True, exist_ok=True)
@@ -40,7 +40,7 @@ class Config:
     def directories(self) -> Dict[str, Path]:
         base_dir = self.config_path.parent
         return {
-            name: base_dir / rel_path
+            name: base_dir / rel_path 
             for name, rel_path in self.config['directories'].items()
         }
 

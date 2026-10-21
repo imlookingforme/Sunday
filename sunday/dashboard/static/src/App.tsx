@@ -95,7 +95,7 @@ export default function App() {
           </button>
         </div>
       </header>
-
+      
       <main style={{ padding: '20px' }}>
         {activeTab === 'orb' && (
           <div>
@@ -128,14 +128,14 @@ export default function App() {
             </div>
           </div>
         )}
-
+        
         {activeTab === 'intelligence' && (
           <div>
             <h2 style={{ color: '#4a90e2' }}>Intelligence Panel</h2>
             <IntelligencePanel />
           </div>
         )}
-
+        
         {activeTab === 'chat' && (
           <div style={{ height: '600px' }}>
             <h2 style={{ color: '#4a90e2' }}>Chat</h2>

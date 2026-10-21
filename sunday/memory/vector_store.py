@@ -22,19 +22,19 @@ class VectorStore:
     async def initialize(self):
         if self._initialized:
             return
-
+        
         if HAS_CHROMADB:
             def sync_init():
                 client = chromadb.PersistentClient(path=self.persist_directory)
                 emb_fn = embedding_functions.SentenceTransformerEmbeddingFunction(model_name="all-MiniLM-L6-v2")
                 return client.get_or_create_collection(name="sunday_memory", embedding_function=emb_fn)
             self._collection = await asyncio.to_thread(sync_init)
-
+            
         self._initialized = True
 
     async def add_document(self, doc_id: str, text: str, metadata: Dict[str, Any] = None):
         await self.initialize()
-
+        
         if HAS_CHROMADB:
             def sync_add():
                 self._collection.upsert(
@@ -45,17 +45,17 @@ class VectorStore:
             await asyncio.to_thread(sync_add)
         else:
             self._fallback_store.append({"id": doc_id, "text": text, "metadata": metadata or {}})
-
+            
     async def search(self, query: str, limit: int = 5) -> List[Dict[str, Any]]:
         await self.initialize()
-
+        
         if HAS_CHROMADB:
             def sync_search():
                 results = self._collection.query(
                     query_texts=[query],
                     n_results=limit
                 )
-
+                
                 formatted_results = []
                 if results.get('ids') and len(results['ids']) > 0:
                     for i in range(len(results['ids'][0])):
@@ -74,7 +74,7 @@ class VectorStore:
                 score = sum(1 for term in query_terms if term in doc["text"].lower())
                 if score > 0:
                     scored_docs.append({"doc": doc, "score": score})
-
+            
             scored_docs.sort(key=lambda x: x["score"], reverse=True)
             return [
                 {

@@ -11,7 +11,7 @@ async def draft_content(topic: str, content_type: str = "article", tone: str = "
         # In production, would call Ollama to generate content
         draft = f"# {topic.title()}\n\nThis is a {content_type} about {topic} with a {tone} tone. "
         draft += f"The content length is {length}. [LLM generation would go here]"
-
+        
         return ToolResult(success=True, data={
             "topic": topic,
             "content_type": content_type,
@@ -27,7 +27,7 @@ async def rewrite_text(text: str, tone: str = "professional", clarity: str = "hi
     try:
         # Placeholder for LLM-based rewriting
         rewritten = f"[Rewritten with {tone} tone and {clarity} clarity]\n\n{text}"
-
+        
         return ToolResult(success=True, data={
             "original": text,
             "rewritten": rewritten,
@@ -44,7 +44,7 @@ async def summarize_content(text: str, max_length: int = 200) -> ToolResult:
         # Simple summary - take first N chars as placeholder
         # In production, would use LLM for intelligent summarization
         summary = text[:max_length] + "..." if len(text) > max_length else text
-
+        
         return ToolResult(success=True, data={
             "original_length": len(text),
             "summary": summary,
@@ -59,7 +59,7 @@ async def expand_content(text: str, expansion_factor: int = 2) -> ToolResult:
     try:
         # Placeholder for LLM-based expansion
         expanded = f"[Expanded {expansion_factor}x]\n\n{text}"
-
+        
         return ToolResult(success=True, data={
             "original": text,
             "expanded": expanded,
@@ -74,7 +74,7 @@ async def brainstorm(topic: str, num_ideas: int = 5) -> ToolResult:
     try:
         # Placeholder for LLM-based brainstorming
         ideas = [f"Idea {i+1} for {topic}" for i in range(num_ideas)]
-
+        
         return ToolResult(success=True, data={
             "topic": topic,
             "ideas": ideas,
@@ -88,7 +88,7 @@ async def draft_email(recipient: str, subject: str, body: str = "", tone: str = 
     """Compose email (draft only)."""
     try:
         email = f"To: {recipient}\nSubject: {subject}\n\n{body}"
-
+        
         return ToolResult(success=True, data={
             "recipient": recipient,
             "subject": subject,
@@ -106,7 +106,7 @@ async def draft_cv(section: str, details: dict) -> ToolResult:
         cv_section = f"# {section.title()}\n\n"
         for key, value in details.items():
             cv_section += f"**{key}:** {value}\n"
-
+        
         return ToolResult(success=True, data={
             "section": section,
             "content": cv_section
@@ -132,7 +132,7 @@ async def interview_prep(role: str, company: str = "") -> ToolResult:
                 f"What are your strengths?"
             ]
         }
-
+        
         return ToolResult(success=True, data=prep)
     except Exception as e:
         return ToolResult(success=False, error=str(e))
@@ -151,7 +151,7 @@ async def social_media_plan(topic: str, platform: str = "twitter") -> ToolResult
             ],
             "schedule": "Weekly posting recommended"
         }
-
+        
         return ToolResult(success=True, data=plan)
     except Exception as e:
         return ToolResult(success=False, error=str(e))
@@ -166,7 +166,7 @@ async def proofread(text: str) -> ToolResult:
             "Improve clarity",
             "Check factual accuracy"
         ]
-
+        
         return ToolResult(success=True, data={
             "text": text,
             "suggestions": suggestions,
@@ -181,7 +181,7 @@ async def translate_text(text: str, target_language: str = "Spanish") -> ToolRes
     try:
         # Placeholder for translation service
         translated = f"[Translated to {target_language}]\n\n{text}"
-
+        
         return ToolResult(success=True, data={
             "original": text,
             "translated": translated,
@@ -201,7 +201,7 @@ async def meeting_to_actions(meeting_notes: str) -> ToolResult:
             line = line.strip()
             if line and (line.lower().startswith("action") or line.startswith("-") or line.startswith("*")):
                 actions.append(line.lstrip("action-").lstrip("*").strip())
-
+        
         return ToolResult(success=True, data={
             "meeting_notes": meeting_notes,
             "action_items": actions,
@@ -217,7 +217,7 @@ async def reflective_chat(user_input: str) -> ToolResult:
         # Placeholder for reflective conversation
         # In production, would use LLM with empathetic persona
         response = f"I hear you. {user_input} sounds important. Would you like to talk more about it?"
-
+        
         return ToolResult(success=True, data={
             "user_input": user_input,
             "response": response,
@@ -241,7 +241,7 @@ async def marketing_strategy(product: str, target_audience: str) -> ToolResult:
             "channels": ["Social media", "Email", "Content marketing"],
             "timeline": "3-month campaign recommended"
         }
-
+        
         return ToolResult(success=True, data=strategy)
     except Exception as e:
         return ToolResult(success=False, error=str(e))

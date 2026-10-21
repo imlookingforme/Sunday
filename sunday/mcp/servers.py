@@ -5,7 +5,7 @@ from typing import Dict, Any
 
 class MCPServerRegistry:
     """Registry for MCP server configurations."""
-
+    
     def __init__(self):
         """Initialize MCP server registry with default servers."""
         self.servers: Dict[str, Dict[str, Any]] = {
@@ -73,41 +73,41 @@ class MCPServerRegistry:
                 }
             }
         }
-
+    
     def register_server(self, name: str, config: Dict[str, Any]) -> None:
         """Register a custom MCP server.
-
+        
         Args:
             name: Server name
             config: Server configuration
         """
         self.servers[name] = config
-
+    
     def get_server(self, name: str) -> Dict[str, Any]:
         """Get server configuration.
-
+        
         Args:
             name: Server name
-
+            
         Returns:
             Server configuration
         """
         return self.servers.get(name, {})
-
+    
     def list_servers(self) -> Dict[str, Dict[str, Any]]:
         """List all registered servers.
-
+        
         Returns:
             Dictionary of all servers
         """
         return self.servers
-
+    
     def remove_server(self, name: str) -> bool:
         """Remove a server.
-
+        
         Args:
             name: Server name
-
+            
         Returns:
             True if removed, False if not found
         """

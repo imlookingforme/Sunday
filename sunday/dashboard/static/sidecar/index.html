@@ -152,7 +152,7 @@
       <div class="hud-title">🌸 Senpai Focus</div>
       <div id="statusBadge" class="status-badge">GROWING</div>
     </div>
-
+    
     <div class="tree-stage-visual">
       <div id="treeIcon" class="tree-icon growing">🌸</div>
     </div>
@@ -190,7 +190,7 @@
       document.getElementById('progressFill').style.width = data.growth_percentage + '%';
       const mins = Math.floor(data.remaining_seconds / 60);
       const secs = Math.floor(data.remaining_seconds % 60);
-      document.getElementById('timerDisplay').innerText =
+      document.getElementById('timerDisplay').innerText = 
         String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
     }
 

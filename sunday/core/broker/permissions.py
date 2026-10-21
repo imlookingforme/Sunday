@@ -14,11 +14,11 @@ class ToolRisk(Enum):
 
 class PermissionChecker:
     """Check if an actor is allowed to use a tool."""
-
+    
     def __init__(self, permission_rules: Dict[str, Dict[str, Set[str]]]):
         """
         Initialize permission checker.
-
+        
         Args:
             permission_rules: Dict mapping actors to their allowed tools per risk level
                 {
@@ -27,18 +27,18 @@ class PermissionChecker:
                 }
         """
         self.permission_rules = permission_rules
-
+    
     def is_allowed(self, tool: str, actor: str, risk: ToolRisk) -> bool:
         """Check if actor is allowed to use tool at given risk level."""
         actor_rules = self.permission_rules.get(actor, {})
         risk_rules = actor_rules.get(risk.value, set())
-
+        
         # Wildcard means all tools allowed at this risk level
         if "*" in risk_rules:
             return True
-
+        
         return tool in risk_rules
-
+    
     def get_allowed_tools(self, actor: str, risk: ToolRisk) -> Set[str]:
         """Get all tools allowed for actor at given risk level."""
         actor_rules = self.permission_rules.get(actor, {})

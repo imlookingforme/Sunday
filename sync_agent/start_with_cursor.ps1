@@ -25,10 +25,10 @@ $cursorPath = "D:\cursor\Cursor.exe"
 if (Test-Path $cursorPath) {
     $cursorProcess = Start-Process -FilePath $cursorPath -PassThru
     Write-Host "Cursor started (PID: $($cursorProcess.Id))"
-
+    
     # Wait for Cursor to close
     $cursorProcess.WaitForExit()
-
+    
     # Stop sync agent when Cursor closes
     Write-Host "Cursor closed, stopping sync agent..."
     Stop-Process -Id $syncProcess.Id -Force -ErrorAction SilentlyContinue

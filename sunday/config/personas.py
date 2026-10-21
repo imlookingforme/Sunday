@@ -25,12 +25,12 @@ class Persona:
     traits: List[str] = field(default_factory=list)
     opening_lines: List[str] = field(default_factory=list)
     system_prompt: str = ""
-
+    
     def get_system_prompt(self) -> str:
         """Get the full system prompt for this persona."""
         if self.system_prompt:
             return self.system_prompt
-
+        
         # Build default system prompt from traits
         traits_str = "\n".join(f"- {trait}" for trait in self.traits)
         return f"""You are {self.name}, a voice-first personal AI assistant.
@@ -43,31 +43,31 @@ You are helpful, capable, and maintain your persona consistently. You have acces
 
 class PersonaManager:
     """Manages persona switching and configuration."""
-
+    
     def __init__(self, config_dir: Optional[Path] = None):
         self.config_dir = config_dir or Path("sunday/config")
         self.current_mode = PersonaMode.SUNDAY
         self.personas: Dict[PersonaMode, Persona] = {}
         self._load_personas()
-
+    
     def _load_personas(self):
         """Load persona definitions from YAML."""
         personas_file = self.config_dir / "personas.yaml"
-
+        
         if not personas_file.exists():
             self._create_default_personas()
             return
-
+        
         with open(personas_file, "r") as f:
             personas_data = yaml.safe_load(f) or {}
-
+        
         for mode_name, persona_data in personas_data.items():
             try:
                 mode = PersonaMode(mode_name)
                 self.personas[mode] = Persona(**persona_data)
             except ValueError:
                 continue
-
+    
     def _create_default_personas(self):
         """Create default persona definitions."""
         self.personas = {
@@ -133,15 +133,15 @@ class PersonaManager:
                 ],
             ),
         }
-
+        
         # Save default personas
         self._save_personas()
-
+    
     def _save_personas(self):
         """Save current personas to YAML."""
         personas_file = self.config_dir / "personas.yaml"
         personas_file.parent.mkdir(parents=True, exist_ok=True)
-
+        
         personas_data = {}
         for mode, persona in self.personas.items():
             personas_data[mode.value] = {
@@ -151,22 +151,22 @@ class PersonaManager:
                 "opening_lines": persona.opening_lines,
                 "system_prompt": persona.system_prompt,
             }
-
+        
         with open(personas_file, "w") as f:
             yaml.dump(personas_data, f, default_flow_style=False)
-
+    
     def set_mode(self, mode: PersonaMode) -> None:
         """Switch to a different persona mode."""
         self.current_mode = mode
-
+    
     def get_current_persona(self) -> Persona:
         """Get the current persona."""
         return self.personas.get(self.current_mode, self.personas[PersonaMode.SUNDAY])
-
+    
     def get_system_prompt(self) -> str:
         """Get the system prompt for the current persona."""
         return self.get_current_persona().get_system_prompt()
-
+    
     def get_opening_line(self) -> str:
         """Get a random opening line for the current persona."""
         import random

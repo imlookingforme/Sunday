@@ -105,19 +105,19 @@ class DashboardState:
         self.orb_state = "idle"
         self.intelligence_data = {}
         self.connected_clients = 0
-
+    
     def set_orb_state(self, state: str):
         """Set orb state."""
         self.orb_state = state
-
+    
     def update_intelligence(self, module: str, data: dict):
         """Update intelligence module data."""
         self.intelligence_data[module] = data
-
+    
     def add_client(self):
         """Add connected client."""
         self.connected_clients += 1
-
+    
     def remove_client(self):
         """Remove connected client."""
         self.connected_clients = max(0, self.connected_clients - 1)
@@ -149,7 +149,7 @@ async def set_orb_state(state: str):
     valid_states = ["idle", "listening", "thinking", "speaking", "searching", "coding"]
     if state not in valid_states:
         return {"error": f"Invalid state. Must be one of: {valid_states}"}
-
+    
     dashboard_state.set_orb_state(state)
     return {"orb_state": state}
 
@@ -226,7 +226,7 @@ async def execute_tool(request: ToolExecutionRequest):
         tool = ToolRegistry.get(request.tool_name)
         if not tool:
             raise HTTPException(status_code=404, detail=f"Tool '{request.tool_name}' not found")
-
+        
         # Execute tool
         result = await tool.func(**request.args)
         return {

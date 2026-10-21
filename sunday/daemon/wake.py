@@ -63,7 +63,7 @@ class WakeWordDetector:
             self.stream = stream
 
             logger.info(f"Listening for wake word: '{self.wake_word}' (or 'Hey Jarvis')...")
-
+            
             while self.is_listening:
                 data = await loop.run_in_executor(
                     None,

@@ -23,7 +23,7 @@ class TaskPlanner:
         """Generate a plan consisting of sequential tool calls."""
         if not available_tools:
             return []
-
+            
         if self.has_ollama:
             tools_desc = "\n".join([f"- {t.get('name')}: {t.get('description')}" for t in available_tools])
             prompt = (
@@ -51,10 +51,10 @@ class TaskPlanner:
         for step in plan:
             tool_name = step.get("tool")
             params = step.get("params", {})
-
+            
             # Here we would lookup the tool from registry
             # Check approval
             # Execute tool
             results.append(f"Executed {tool_name} with {params}")
-
+            
         return results

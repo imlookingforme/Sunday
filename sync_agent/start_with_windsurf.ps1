@@ -25,10 +25,10 @@ $windsurfPath = "D:\Devin\Devin.exe"
 if (Test-Path $windsurfPath) {
     $windsurfProcess = Start-Process -FilePath $windsurfPath -PassThru
     Write-Host "Windsurf started (PID: $($windsurfProcess.Id))"
-
+    
     # Wait for Windsurf to close
     $windsurfProcess.WaitForExit()
-
+    
     # Stop sync agent when Windsurf closes
     Write-Host "Windsurf closed, stopping sync agent..."
     Stop-Process -Id $syncProcess.Id -Force -ErrorAction SilentlyContinue

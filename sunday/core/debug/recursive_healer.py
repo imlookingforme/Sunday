@@ -84,7 +84,7 @@ class RecursiveSelfHealingEngine:
         if "ModuleNotFoundError" in error_trace or "ImportError" in error_trace:
             match = re.search(r"No module named ['\"]([^'\"]+)['\"]", error_trace)
             missing_mod = match.group(1) if match else "unknown"
-
+            
             # Hypothesis A: Provide fallback or mock definition
             patch_a = f"# Self-healed import fallback\ntry:\n    import {missing_mod}\nexcept ImportError:\n    class MockModule:\n        def __getattr__(self, name):\n            return lambda *a, **k: None\n    {missing_mod} = MockModule()\n\n" + code_str
             branches.append(HealingBranch(f"Inject fallback mock for missing module '{missing_mod}'", patch_a, 1))

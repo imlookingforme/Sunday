@@ -42,10 +42,10 @@ class BrokerResult:
 
 class Broker:
     """Fail-closed security broker for tool execution.
-
+    
     Pipeline: VALIDATE → CLASSIFY → GATE → INJECT → EXECUTE → AUDIT
     """
-
+    
     def __init__(
         self,
         audit_ledger: AuditLedger,
@@ -57,11 +57,11 @@ class Broker:
         self.vault = vault
         self.permission_checker = permission_checker
         self.tool_registry = tool_registry
-
+        
     async def dispatch(self, tool_call: ToolCall, executor: callable) -> BrokerResult:
         """
         Execute tool through fail-closed pipeline.
-
+        
         Pipeline:
         1. VALIDATE - Coerce args through tool's typed model
         2. CLASSIFY - Derive reversibility from tool flags
@@ -77,7 +77,7 @@ class Broker:
                 success=False,
                 message=f"Tool '{tool_call.tool}' not registered"
             )
-
+        
         tool_config = self.tool_registry[tool_call.tool]
         validated = await self._validate_args(tool_call, tool_config)
         if not validated:
@@ -86,11 +86,11 @@ class Broker:
                 success=False,
                 message="Argument validation failed"
             )
-
+        
         # 2. CLASSIFY - Derive reversibility from tool flags
         reversible = tool_config.get("reversible", False)
         risk = ToolRisk(tool_config.get("risk", "medium"))
-
+        
         # 3. GATE - Deny-by-default, check confirmation
         if not self.permission_checker.is_allowed(
             tool_call.tool,
@@ -102,7 +102,7 @@ class Broker:
                 success=False,
                 message=f"Tool '{tool_call.tool}' not allowed for actor '{tool_call.actor}'"
             )
-
+        
         if not reversible and not tool_call.confirmed and risk in [ToolRisk.HIGH, ToolRisk.CRITICAL]:
             return BrokerResult(
                 code="needs_confirmation",
@@ -110,10 +110,10 @@ class Broker:
                 message=f"Tool '{tool_call.tool}' requires confirmation",
                 requires_confirmation=True
             )
-
+        
         # 4. INJECT - Replace {{secret:NAME}} markers
         injected = await self._inject_secrets(tool_call.args)
-
+        
         # 5. EXECUTE - Run tool
         try:
             result = await executor(tool_call.tool, injected)
@@ -123,7 +123,7 @@ class Broker:
             result = str(e)
             success = False
             message = f"Tool execution failed: {str(e)}"
-
+        
         # 6. AUDIT - Append hash-chained record
         await self.audit_ledger.log(
             tool=tool_call.tool,
@@ -134,14 +134,14 @@ class Broker:
             success=success,
             risk=risk.value
         )
-
+        
         return BrokerResult(
             code="executed",
             success=success,
             data=result,
             message=message
         )
-
+    
     async def _validate_args(self, tool_call: ToolCall, tool_config: Dict[str, Any]) -> bool:
         """Validate tool arguments against schema."""
         # For now, basic validation - check required args are present
@@ -150,7 +150,7 @@ class Broker:
             if arg not in tool_call.args:
                 return False
         return True
-
+    
     async def _inject_secrets(self, args: Dict[str, Any]) -> Dict[str, Any]:
         """Replace {{secret:NAME}} markers with actual secrets from vault."""
         injected = {}

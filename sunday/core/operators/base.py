@@ -32,7 +32,7 @@ class Response:
     text: str
     tool_calls: list = None
     metadata: dict = None
-
+    
     def __post_init__(self):
         if self.tool_calls is None:
             self.tool_calls = []
@@ -42,7 +42,7 @@ class Response:
 
 class SpecialistOperator(ABC):
     """Base class for specialist operators with least-privilege tool slices."""
-
+    
     def __init__(
         self,
         name: str,
@@ -51,7 +51,7 @@ class SpecialistOperator(ABC):
         llm_client=None
     ):
         """Initialize specialist operator.
-
+        
         Args:
             name: Operator name
             allowed_tools: Set of tools this operator can use (least-privilege)
@@ -63,37 +63,37 @@ class SpecialistOperator(ABC):
         self.system_prompt = system_prompt
         self.llm_client = llm_client
         self.memory_namespace = f"memory_{name}"
-
+    
     @abstractmethod
     async def handle_turn(self, input: str, context: Context) -> Response:
         """Handle a conversation turn.
-
+        
         Args:
             input: User input
             context: Execution context
-
+            
         Returns:
             Response with text and optional tool calls
         """
         pass
-
+    
     async def _get_llm_response(
         self,
         prompt: str,
         tools: Optional[list] = None
     ) -> str:
         """Get LLM response with tool access restricted to allowed_tools.
-
+        
         Args:
             prompt: Full prompt including system prompt
             tools: Tool schemas to include
-
+            
         Returns:
             LLM response text
         """
         if not self.llm_client:
             return "LLM client not configured"
-
+        
         # Filter tools to only allowed tools
         if tools:
             allowed_tool_schemas = [
@@ -102,7 +102,7 @@ class SpecialistOperator(ABC):
             ]
         else:
             allowed_tool_schemas = None
-
+        
         try:
             response = await self.llm_client.generate(
                 model="llama3.1",
@@ -112,11 +112,11 @@ class SpecialistOperator(ABC):
             return response.get("response", "")
         except Exception as e:
             return f"Error getting LLM response: {str(e)}"
-
+    
     def can_use_tool(self, tool_name: str) -> bool:
         """Check if operator is allowed to use a tool."""
         return tool_name in self.allowed_tools
-
+    
     def get_tool_schemas(self, tool_registry: Dict[str, Any]) -> list:
         """Get tool schemas for allowed tools only."""
         schemas = []

@@ -52,7 +52,7 @@ class SQLiteStore:
     async def initialize(self):
         if self._initialized:
             return
-
+        
         tables = [
             """CREATE TABLE IF NOT EXISTS messages (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -100,23 +100,23 @@ class SQLiteStore:
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP
             )"""
         ]
-
+        
         for table_query in tables:
             await self._execute(table_query)
-
+            
         self._initialized = True
 
     async def add_message(self, session_id: str, role: str, content: str):
         await self.initialize()
         await self._execute(
-            "INSERT INTO messages (session_id, role, content) VALUES (?, ?, ?)",
+            "INSERT INTO messages (session_id, role, content) VALUES (?, ?, ?)", 
             (session_id, role, content)
         )
-
+        
     async def get_messages(self, session_id: str, limit: int = 50) -> List[Dict[str, Any]]:
         await self.initialize()
         return await self._fetchall(
-            "SELECT * FROM messages WHERE session_id = ? ORDER BY timestamp DESC LIMIT ?",
+            "SELECT * FROM messages WHERE session_id = ? ORDER BY timestamp DESC LIMIT ?", 
             (session_id, limit)
         )
 
@@ -124,26 +124,26 @@ class SQLiteStore:
         await self.initialize()
         tags_str = ",".join(tags) if tags else ""
         await self._execute(
-            "INSERT OR REPLACE INTO facts (key, value, tags) VALUES (?, ?, ?)",
+            "INSERT OR REPLACE INTO facts (key, value, tags) VALUES (?, ?, ?)", 
             (key, value, tags_str)
         )
-
+        
     async def get_fact(self, key: str) -> Optional[str]:
         await self.initialize()
         res = await self._fetchall("SELECT value FROM facts WHERE key = ?", (key,))
         return res[0]['value'] if res else None
-
+        
     async def get_facts_by_tag(self, tag: str) -> List[Dict[str, Any]]:
         await self.initialize()
         return await self._fetchall("SELECT * FROM facts WHERE tags LIKE ?", (f"%{tag}%",))
-
+        
     async def add_session_summary(self, session_id: str, summary: str):
         await self.initialize()
         await self._execute(
             "INSERT OR REPLACE INTO summaries (session_id, summary) VALUES (?, ?)",
             (session_id, summary)
         )
-
+        
     async def add_note(self, title: str, content: str):
         await self.initialize()
         await self._execute(
@@ -164,7 +164,7 @@ class SQLiteStore:
             "INSERT OR REPLACE INTO user_profile (key, value) VALUES (?, ?)",
             (key, value)
         )
-
+        
     async def get_profile_data(self, key: str) -> Optional[str]:
         await self.initialize()
         res = await self._fetchall("SELECT value FROM user_profile WHERE key = ?", (key,))
@@ -176,7 +176,7 @@ class SQLiteStore:
         allowed_tools_str = json.dumps(agent_data.get("allowed_tools", []))
         config_str = json.dumps(agent_data.get("config", {}))
         await self._execute(
-            """INSERT OR REPLACE INTO custom_agents
+            """INSERT OR REPLACE INTO custom_agents 
                (id, name, description, system_prompt, model, allowed_tools, memory_namespace, config_json)
                VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
             (
@@ -224,3 +224,4 @@ class SQLiteStore:
             (name_or_id, name_or_id)
         )
         return count > 0
+

@@ -132,7 +132,7 @@ const technoVertexShader = `
     vNormal = normal;
     float time = uTime * uSpeed;
     float noise = snoise(normal * uNoiseScale + vec3(time * 0.2));
-
+    
     // Audio FFT frequency displacement surge
     float surge = uAudioLevel * 0.45;
     float displacement = (noise * 0.25) + (noise * surge);

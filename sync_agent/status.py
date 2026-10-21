@@ -27,17 +27,17 @@ class StatusIndicator:
 
     def _display_status(self):
         timestamp = self.last_sync_time.strftime("%H:%M:%S") if self.last_sync_time else "Never"
-
+        
         status_colors = {
             SyncStatus.IDLE: Fore.GREEN,
             SyncStatus.SYNCING: Fore.YELLOW,
             SyncStatus.CONFLICT: Fore.RED,
             SyncStatus.ERROR: Fore.RED
         }
-
+        
         color = status_colors.get(self.current_status, Fore.WHITE)
         status_text = self.current_status.value.upper()
-
+        
         print(f"{color}[{status_text}] {Style.RESET_ALL}{self.message} (Last sync: {timestamp})")
 
     def display_idle(self):

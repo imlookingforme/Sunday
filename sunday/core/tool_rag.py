@@ -27,12 +27,12 @@ class ToolRAG:
             ids = [t.get("name", "") for t in tools]
             if documents:
                 self.collection.upsert(documents=documents, metadatas=metadatas, ids=ids)
-
+    
     async def retrieve_tools(self, query: str, top_k: int = 3) -> List[Dict[str, Any]]:
         """Retrieve top_k most relevant tools for a given query."""
         if not self.tools:
             return []
-
+            
         if self.use_chroma:
             results = self.collection.query(query_texts=[query], n_results=min(top_k, len(self.tools)))
             retrieved_names = [meta["name"] for meta in results["metadatas"][0]]

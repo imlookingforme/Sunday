@@ -14,11 +14,11 @@ const MODULES = [
 export default function IntelligencePanel() {
   const [modules, setModules] = useState<Record<string, IntelligenceModule>>({});
   const [selectedModule, setSelectedModule] = useState<string | null>(null);
-
+  
   useEffect(() => {
     // Connect to SSE endpoint
     const eventSource = new EventSource('http://localhost:8000/api/events');
-
+    
     eventSource.addEventListener('intelligence', (event) => {
       const data = JSON.parse(event.data);
       setModules(prev => ({
@@ -30,16 +30,16 @@ export default function IntelligencePanel() {
         }
       }));
     });
-
+    
     eventSource.addEventListener('heartbeat', () => {
       // Keep connection alive
     });
-
+    
     return () => {
       eventSource.close();
     };
   }, []);
-
+  
   return (
     <div className="intelligence-panel" style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '10px', padding: '20px' }}>
       {MODULES.map(module => (
@@ -71,7 +71,7 @@ export default function IntelligencePanel() {
           )}
         </div>
       ))}
-
+      
       {selectedModule && (
         <div
           className="module-detail"

@@ -6,10 +6,10 @@ from .base import SpecialistOperator, Context, Response
 
 class SecurityOperator(SpecialistOperator):
     """Handles security lockdown, audit, and security-related operations.
-
+    
     Manages security states, audit logs, and emergency lockdowns.
     """
-
+    
     def __init__(self, llm_client=None):
         super().__init__(
             name="security",
@@ -54,21 +54,21 @@ Emergency lockdown:
 Remember: You are the security specialist. Your job is to protect the system, even if that means denying requests.""",
             llm_client=llm_client
         )
-
+    
     async def handle_turn(self, input: str, context: Context) -> Response:
         """Handle a security turn."""
         full_prompt = self._build_prompt(input, context)
         response_text = await self._get_llm_response(full_prompt)
         return Response(text=response_text)
-
+    
     def _build_prompt(self, input: str, context: Context) -> str:
         """Build full prompt with system prompt and context."""
         prompt_parts = [self.system_prompt]
-
+        
         if context.current_state:
             prompt_parts.append(f"\nCurrent security state: {context.current_state}")
-
+        
         prompt_parts.append(f"\nSecurity request: {input}")
         prompt_parts.append("\nHandle the security matter:")
-
+        
         return "\n".join(prompt_parts)

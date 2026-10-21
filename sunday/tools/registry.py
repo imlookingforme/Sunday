@@ -29,7 +29,7 @@ class Tool:
     idempotent: bool = True
     allowed_personas: List[str] = None
     required_args: List[str] = None
-
+    
     def __post_init__(self):
         if self.allowed_personas is None:
             self.allowed_personas = ["sunday", "jarvis", "friday"]

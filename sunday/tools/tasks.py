@@ -83,7 +83,7 @@ async def break_down_task(task_id: str, subtasks: list) -> ToolResult:
                 "title": st if isinstance(st, str) else st.get("title", ""),
                 "description": st.get("description", "") if isinstance(st, dict) else ""
             })
-
+        
         await _task_store.break_down_task(task_id, subtask_dicts)
         return ToolResult(success=True, data={"parent_id": task_id, "subtasks": subtask_dicts})
     except Exception as e:
@@ -101,7 +101,7 @@ async def extract_tasks_from_source(source_text: str) -> ToolResult:
             line = line.strip()
             if line and (line.startswith('-') or line.startswith('*') or line[0].isdigit()):
                 tasks.append(line.lstrip('-*').lstrip('0123456789.').strip())
-
+        
         return ToolResult(success=True, data={"extracted_tasks": tasks})
     except Exception as e:
         return ToolResult(success=False, error=str(e))
@@ -130,14 +130,14 @@ async def proactive_daily_plan() -> ToolResult:
             "SELECT * FROM tasks WHERE due_date <= ? AND status != 'completed' ORDER BY priority DESC, due_date ASC",
             (today,)
         )
-
+        
         plan = {
             "date": today,
             "total_tasks": len(tasks),
             "high_priority": len([t for t in tasks if t.get("priority", 0) >= 3]),
             "tasks": tasks[:10]  # Top 10 tasks
         }
-
+        
         return ToolResult(success=True, data=plan)
     except Exception as e:
         return ToolResult(success=False, error=str(e))
@@ -151,7 +151,7 @@ async def smart_search(query: str) -> ToolResult:
             "SELECT * FROM tasks WHERE title LIKE ? OR description LIKE ?",
             (f"%{query}%", f"%{query}%")
         )
-
+        
         # In production, would also search notes, documents, etc.
         return ToolResult(success=True, data={
             "query": query,
@@ -183,7 +183,7 @@ async def organize_inbox() -> ToolResult:
         inbox_tasks = await _task_store._fetchall(
             "SELECT * FROM tasks WHERE tags LIKE '%inbox%' AND status = 'pending'"
         )
-
+        
         organized = {
             "total": len(inbox_tasks),
             "categories": {
@@ -193,13 +193,13 @@ async def organize_inbox() -> ToolResult:
                 "reference": []
             }
         }
-
+        
         # Simple categorization based on content
         for task in inbox_tasks:
             title = task.get("title", "").lower()
             desc = task.get("description", "").lower()
             content = title + desc
-
+            
             if any(kw in content for kw in ["quick", "simple", "easy", "fast"]):
                 organized["categories"]["quick_wins"].append(task)
             elif any(kw in content for kw in ["project", "build", "create", "develop"]):
@@ -208,7 +208,7 @@ async def organize_inbox() -> ToolResult:
                 organized["categories"]["someday"].append(task)
             else:
                 organized["categories"]["reference"].append(task)
-
+        
         return ToolResult(success=True, data=organized)
     except Exception as e:
         return ToolResult(success=False, error=str(e))
@@ -222,7 +222,7 @@ async def set_focus_mode() -> ToolResult:
             "SELECT * FROM tasks WHERE due_date <= ? AND status != 'completed' ORDER BY priority DESC LIMIT 3",
             (today,)
         )
-
+        
         return ToolResult(success=True, data={
             "focus_tasks": tasks,
             "message": f"Focus mode: {len(tasks)} priority tasks surfaced"
@@ -235,17 +235,17 @@ async def get_daily_digest() -> ToolResult:
     """End-of-day summary of done/pending."""
     try:
         today = datetime.now().strftime("%Y-%m-%d")
-
+        
         completed = await _task_store._fetchall(
             "SELECT * FROM tasks WHERE status = 'completed' AND updated_at >= ?",
             (f"{today} 00:00:00",)
         )
-
+        
         pending = await _task_store._fetchall(
             "SELECT * FROM tasks WHERE status != 'completed' AND due_date <= ?",
             (today,)
         )
-
+        
         digest = {
             "date": today,
             "completed_count": len(completed),
@@ -253,7 +253,7 @@ async def get_daily_digest() -> ToolResult:
             "pending_count": len(pending),
             "pending_tasks": pending
         }
-
+        
         return ToolResult(success=True, data=digest)
     except Exception as e:
         return ToolResult(success=False, error=str(e))

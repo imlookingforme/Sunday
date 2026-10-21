@@ -36,7 +36,7 @@ class SwarmAgent(ABC):
         self.system_prompt = system_prompt
         self.allowed_tools = allowed_tools or []
         self.memory_namespace = memory_namespace or f"swarm:{name}"
-
+        
         self.active_tasks: Dict[str, asyncio.Task] = {}
         self.task_contexts: Dict[str, Dict[str, Any]] = {}
         self._running = False
@@ -57,7 +57,7 @@ class SwarmAgent(ABC):
         self.bus.unregister_agent_mailbox(self.name, self.handle_event)
         self.bus.unsubscribe(EventTopic.TASK_PATCH.value, self._handle_possible_patch)
         self.bus.unsubscribe(EventTopic.TASK_CANCEL.value, self._handle_possible_cancel)
-
+        
         # Cancel running background tasks
         for task_id, task in list(self.active_tasks.items()):
             if not task.done():

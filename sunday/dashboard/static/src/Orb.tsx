@@ -19,12 +19,12 @@ const STATE_PROFILES = {
 function AnimatedOrb({ state }: OrbProps) {
   const meshRef = useRef<THREE.Mesh>(null);
   const [profile, setProfile] = useState(STATE_PROFILES.idle);
-
+  
   // Update profile when state changes
   useEffect(() => {
     setProfile(STATE_PROFILES[state as keyof typeof STATE_PROFILES] || STATE_PROFILES.idle);
   }, [state]);
-
+  
   // Animate orb
   useFrame((state) => {
     if (meshRef.current) {
@@ -32,7 +32,7 @@ function AnimatedOrb({ state }: OrbProps) {
       meshRef.current.rotation.x += profile.speed * 0.005;
     }
   });
-
+  
   return (
     <Sphere ref={meshRef} args={[1, 64, 64]} scale={profile.scale}>
       <MeshDistortMaterial

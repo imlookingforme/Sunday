@@ -131,9 +131,9 @@ class Conductor(SwarmAgent):
             ("reflective", "Reflective (Pi)"),
             ("sunday", "Sunday"),
         ]:
-            if (f"switch to {p_key}" in lowered or
-                f"switch persona to {p_key}" in lowered or
-                f"persona {p_key}" in lowered or
+            if (f"switch to {p_key}" in lowered or 
+                f"switch persona to {p_key}" in lowered or 
+                f"persona {p_key}" in lowered or 
                 f"change persona to {p_key}" in lowered or
                 f"become {p_key}" in lowered or
                 lowered == f"switch {p_key}" or
@@ -269,7 +269,7 @@ class Conductor(SwarmAgent):
             # Detect available models dynamically
             models_response = await client.list()
             available = [m.model for m in models_response.models]
-
+            
             chosen_model = None
             for preferred in ["llama3.2:1b", "llama3.2:3b", "llama3.2", "llama3.1", "phi3", "mistral"]:
                 if any(preferred in m for m in available):
@@ -282,7 +282,7 @@ class Conductor(SwarmAgent):
                 msgs = [{"role": "system", "content": current_system_prompt}]
                 for turn in self.conversation_history[-6:]:
                     msgs.append({"role": turn["role"], "content": turn["content"]})
-
+                
                 resp = await client.chat(model=chosen_model, messages=msgs)
                 if resp and "message" in resp and resp["message"]["content"]:
                     return resp["message"]["content"].strip()
@@ -299,7 +299,7 @@ class Conductor(SwarmAgent):
                 msgs = []
                 for turn in self.conversation_history[-6:]:
                     msgs.append({"role": turn["role"], "content": turn["content"]})
-
+                
                 resp = await client.messages.create(
                     model="claude-3-5-sonnet-20241022",
                     max_tokens=600,
@@ -366,7 +366,7 @@ class Conductor(SwarmAgent):
             return f"Yo! {self.persona_name} is locked in and listening. What are we tackling today, boss?"
         if any(w in lowered for w in ["thank", "thanks", "appreciate"]):
             return "Anytime, boss! No cap, that's what I'm here for. Let's keep cooking."
-
+        
         return (
             f"I hear you loud and clear on: '{text}'. "
             "I'm ready to dispatch tasks to the swarm (type or say what to code, search, or automate), "

@@ -82,7 +82,7 @@ def register():
         "high": ToolRisk.HIGH,
         "critical": ToolRisk.CRITICAL
     }}
-
+    
     tool = Tool(
         name="{tool_name}",
         description="{description}",
@@ -100,7 +100,7 @@ def register():
         try:
             target_file.write_text(file_content, encoding="utf-8")
             logger.info(f"Self-authored tool saved to {target_file}")
-
+            
             # Dynamically import and register into running ToolRegistry
             registered = self.load_and_register_plugin(target_file)
             return {

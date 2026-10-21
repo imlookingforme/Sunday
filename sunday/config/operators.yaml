@@ -142,31 +142,31 @@ intent_mapping:
   conversation:
     keywords: ["chat", "talk", "discuss", "tell me", "how are you", "reflect"]
     default_operator: "conversation"
-
+  
   research:
     keywords: ["search", "find", "research", "look up", "what is", "who is", "when was"]
     default_operator: "research"
-
+  
   automation:
     keywords: ["do", "execute", "run", "schedule", "remind", "task", "todo"]
     default_operator: "automation"
-
+  
   device_control:
     keywords: ["turn on", "turn off", "light", "thermostat", "lock", "unlock", "home"]
     default_operator: "device_control"
-
+  
   alerting:
     keywords: ["remind", "notify", "alert", "nudge", "briefing", "digest"]
     default_operator: "alerting"
-
+  
   security:
     keywords: ["security", "lockdown", "audit", "secure", "protect"]
     default_operator: "security"
-
+  
   writing:
     keywords: ["write", "draft", "edit", "summarize", "expand", "email", "post"]
     default_operator: "writing"
-
+  
   coding:
     keywords: ["code", "debug", "fix", "implement", "function", "class", "python"]
     default_operator: "coding"

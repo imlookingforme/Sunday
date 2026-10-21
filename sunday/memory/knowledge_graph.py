@@ -48,11 +48,11 @@ class KnowledgeGraph:
                     rows = cursor.fetchall()
                     return [dict(row) for row in rows]
             return await asyncio.to_thread(sync_fetchall)
-
+            
     async def initialize(self):
         if self._initialized:
             return
-
+            
         await self._execute("""
             CREATE TABLE IF NOT EXISTS triples (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -65,7 +65,7 @@ class KnowledgeGraph:
             )
         """)
         self._initialized = True
-
+        
     async def add_triple(self, subject: str, predicate: str, object_: str, confidence: float = 1.0):
         await self.initialize()
         await self._execute(
@@ -73,13 +73,13 @@ class KnowledgeGraph:
                VALUES (?, ?, ?, ?)""",
             (subject, predicate, object_, confidence)
         )
-
+        
     async def query(self, subject: str = None, predicate: str = None, object_: str = None) -> List[Dict[str, Any]]:
         await self.initialize()
-
+        
         conditions = []
         params = []
-
+        
         if subject:
             conditions.append("subject = ?")
             params.append(subject)
@@ -89,9 +89,9 @@ class KnowledgeGraph:
         if object_:
             conditions.append("object = ?")
             params.append(object_)
-
+            
         query_str = "SELECT * FROM triples"
         if conditions:
             query_str += " WHERE " + " AND ".join(conditions)
-
+            
         return await self._fetchall(query_str, tuple(params))

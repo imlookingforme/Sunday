@@ -18,7 +18,7 @@ from sunday.tools.registry import ToolRegistry
 
 def test_insomnia_activation_and_safety():
     engine = InsomniaEngine(min_battery_threshold=20.0)
-
+    
     # Activation & Status
     activated = engine.activate()
     assert activated is True
@@ -39,7 +39,7 @@ def test_insomnia_activation_and_safety():
 @pytest.mark.asyncio
 async def test_newsletter_scout_digestion(tmp_path):
     scout = NewsletterScout(cache_dir=tmp_path / "scout_cache")
-
+    
     # Simulated cycle run
     discoveries = await scout.run_scout_cycle()
     assert len(discoveries) >= 1

@@ -44,14 +44,14 @@ async def create_custom_agent(
             "config": config or {},
         }
         await store.save_custom_agent(agent_data)
-
+        
         # Also auto-export declarative YAML
         export_dir = Path("sunday/data/agents")
         export_dir.mkdir(parents=True, exist_ok=True)
         yaml_file = export_dir / f"{name.lower().replace(' ', '_')}.yaml"
         with open(yaml_file, "w", encoding="utf-8") as f:
             yaml.dump(agent_data, f, default_flow_style=False)
-
+            
         return ToolResult(
             success=True,
             data={

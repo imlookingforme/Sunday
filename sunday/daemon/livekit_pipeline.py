@@ -73,7 +73,7 @@ class LiveKitVoicePipeline:
         self.mode = mode
         self.bus = bus
         self.conductor = conductor
-
+        
         self.stt = None
         self.tts = PiperTTS()
         self.llm_client = None

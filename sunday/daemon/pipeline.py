@@ -57,7 +57,7 @@ class SundayDaemon:
         voice_mode: bool = False,
     ):
         """Initialize Sunday daemon.
-
+        
         Args:
             enable_dashboard: Enable FastAPI dashboard
             enable_sidecar: Enable Windows sidecar
@@ -171,6 +171,16 @@ class SundayDaemon:
         self.livekit_pipeline = LiveKitVoicePipeline(bus=self.swarm_bus, conductor=self.conductor)
         logger.info("Swarm Mesh and 5 Core Specialists initialized")
 
+        if getattr(self, "enable_telegram", False):
+            import os
+            token = os.environ.get("TELEGRAM_BOT_TOKEN")
+            if token:
+                from sunday.daemon.telegram_bot import SundayTelegramBot
+                self._telegram_bot = SundayTelegramBot(token=token, conductor=self.conductor)
+                logger.info("Telegram Bot integration enabled.")
+            else:
+                logger.warning("Telegram Bot enabled but TELEGRAM_BOT_TOKEN not found in environment.")
+
     async def run(self):
         """Run Sunday daemon."""
         self.running = True
@@ -238,6 +248,10 @@ class SundayDaemon:
         await self._connect_mcp_servers()
 
         # Run main loop
+        # Start Telegram Bot if enabled
+        if hasattr(self, "_telegram_bot") and self._telegram_bot:
+            asyncio.create_task(self._telegram_bot.start())
+
         if self.text_mode:
             await self._run_text_loop()
         else:
@@ -257,7 +271,7 @@ class SundayDaemon:
                 log_level="warning"
             )
             server = uvicorn.Server(config)
-
+            
             # Print prominent visual links in console
             print("\n" + "="*58)
             print("  🌟 SUNDAY DASHBOARD & SIDECAR READY")

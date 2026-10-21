@@ -55,27 +55,27 @@ class Settings:
     voice: VoiceSettings = field(default_factory=VoiceSettings)
     memory: MemorySettings = field(default_factory=MemorySettings)
     tools: ToolSettings = field(default_factory=ToolSettings)
-
+    
     # Paths
     config_dir: Path = field(default_factory=lambda: Path("sunday/config"))
     data_dir: Path = field(default_factory=lambda: Path("sunday/data"))
-
+    
     @classmethod
     def from_yaml(cls, config_path: Path) -> "Settings":
         """Load settings from YAML file."""
         if not config_path.exists():
             return cls()
-
+        
         with open(config_path, "r") as f:
             config_data = yaml.safe_load(f) or {}
-
+        
         return cls._from_dict(config_data)
-
+    
     @classmethod
     def _from_dict(cls, data: Dict[str, Any]) -> "Settings":
         """Create settings from dictionary."""
         settings = cls()
-
+        
         if "llm" in data:
             settings.llm = LLMSettings(**data["llm"])
         if "voice" in data:
@@ -84,19 +84,19 @@ class Settings:
             settings.memory = MemorySettings(**data["memory"])
         if "tools" in data:
             settings.tools = ToolSettings(**data["tools"])
-
+        
         return settings
-
+    
     def to_yaml(self, config_path: Path) -> None:
         """Save settings to YAML file."""
         config_path.parent.mkdir(parents=True, exist_ok=True)
-
+        
         data = {
             "llm": self.llm.__dict__,
             "voice": self.voice.__dict__,
             "memory": self.memory.__dict__,
             "tools": self.tools.__dict__,
         }
-
+        
         with open(config_path, "w") as f:
             yaml.dump(data, f, default_flow_style=False)

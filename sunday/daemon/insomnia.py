@@ -41,27 +41,43 @@ class InsomniaEngine:
         if self.keep_display_on:
             flags |= ES_DISPLAY_REQUIRED
 
+
         try:
-            res = ctypes.windll.kernel32.SetThreadExecutionState(flags)
-            if res != 0:
+            if hasattr(ctypes, 'windll'):
+                res = ctypes.windll.kernel32.SetThreadExecutionState(flags)
+                if res != 0:
+                    self.is_active = True
+                    self.paused_by_safety = False
+                    logger.info("Windows Insomnia Engine activated (24/7 background mode enabled).")
+                    return True
+                else:
+                    logger.warning("SetThreadExecutionState returned 0.")
+                    return False
+            else:
+                # Mock for non-Windows testing
                 self.is_active = True
                 self.paused_by_safety = False
-                logger.info("Windows Insomnia Engine activated (24/7 background mode enabled).")
+                logger.info("Mock Insomnia Engine activated (non-Windows system).")
                 return True
-            else:
-                logger.warning("SetThreadExecutionState returned 0.")
-                return False
+
         except Exception as e:
             logger.error(f"Failed to set Windows execution state: {e}")
             return False
 
     def deactivate(self) -> bool:
         """Release sleep suppression and restore normal Windows power behavior."""
+
         try:
-            res = ctypes.windll.kernel32.SetThreadExecutionState(ES_CONTINUOUS)
-            self.is_active = False
-            logger.info("Windows Insomnia Engine deactivated. Default sleep restored.")
-            return res != 0
+            if hasattr(ctypes, 'windll'):
+                res = ctypes.windll.kernel32.SetThreadExecutionState(ES_CONTINUOUS)
+                self.is_active = False
+                logger.info("Windows Insomnia Engine deactivated. Default sleep restored.")
+                return res != 0
+            else:
+                self.is_active = False
+                logger.info("Mock Insomnia Engine deactivated.")
+                return True
+
         except Exception as e:
             logger.error(f"Failed to reset Windows execution state: {e}")
             return False

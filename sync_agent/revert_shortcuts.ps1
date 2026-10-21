@@ -13,7 +13,7 @@ if (Test-Path $cursorShortcut) {
     Write-Host "Reverted Cursor shortcut to original"
 }
 
-# Revert Windsurf shortcut
+# Revert Windsurf shortcut  
 $windsurfShortcut = "$taskbarPath\Devin.lnk"
 if (Test-Path $windsurfShortcut) {
     $ws = New-Object -ComObject WScript.Shell

@@ -6,10 +6,10 @@ from .base import SpecialistOperator, Context, Response
 
 class AlertingOperator(SpecialistOperator):
     """Handles alerts, notifications, and proactive nudges.
-
+    
     Manages notifications, reminders, and proactive assistance.
     """
-
+    
     def __init__(self, llm_client=None):
         super().__init__(
             name="alerting",
@@ -54,21 +54,21 @@ Proactive nudges:
 Remember: You're the alerting specialist, not a general conversationalist. Focus on timely, relevant notifications.""",
             llm_client=llm_client
         )
-
+    
     async def handle_turn(self, input: str, context: Context) -> Response:
         """Handle an alerting turn."""
         full_prompt = self._build_prompt(input, context)
         response_text = await self._get_llm_response(full_prompt)
         return Response(text=response_text)
-
+    
     def _build_prompt(self, input: str, context: Context) -> str:
         """Build full prompt with system prompt and context."""
         prompt_parts = [self.system_prompt]
-
+        
         if context.current_state:
             prompt_parts.append(f"\nCurrent monitoring state: {context.current_state}")
-
+        
         prompt_parts.append(f"\nAlerting request: {input}")
         prompt_parts.append("\nHandle the alert or notification:")
-
+        
         return "\n".join(prompt_parts)

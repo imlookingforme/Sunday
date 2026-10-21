@@ -25,7 +25,7 @@ class Coder(SwarmAgent):
 
     async def execute_task(self, task_id: str, instruction: str, context: Dict[str, Any]) -> Any:
         logger.info(f"[coder] Starting code generation for task {task_id}: {instruction}")
-
+        
         # Publish initial milestone nudge
         await self.publish_nudge(
             task_id=task_id,
@@ -36,7 +36,7 @@ class Coder(SwarmAgent):
         # Simulate or perform code drafting stages with yield points for live steering
         for step in range(1, 3):
             await asyncio.sleep(0.5)  # Cooperative sleep allows incoming patch events
-
+            
             # Check if any patches were applied mid-execution
             active_patches = self.task_contexts.get(task_id, {}).get("patches", [])
             if active_patches:
@@ -72,7 +72,7 @@ class Coder(SwarmAgent):
 
         self.generated_artifacts[task_id] = script_code
         logger.info(f"[coder] Code generation completed for task {task_id}{patch_notes}.")
-
+        
         return {
             "task_id": task_id,
             "status": "success",

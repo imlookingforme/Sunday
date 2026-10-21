@@ -31,7 +31,7 @@ class IntentJudge:
     def __init__(self):
         if HAS_OLLAMA:
             self.client = AsyncClient()
-
+            
     async def classify(self, user_input: str) -> IntentCategory:
         # Simple heuristic fallback
         lowered = user_input.lower()
@@ -48,27 +48,27 @@ class Orchestrator:
         self.settings = settings
         self.persona_manager = persona_manager
         self.tool_registry = tool_registry
-
+        
         self.intent_judge = IntentJudge()
         self.tool_rag = ToolRAG()
         self.approval_broker = ApprovalBroker()
         self.planner = TaskPlanner(tool_registry, self.approval_broker)
-
+        
         self.history: List[Dict[str, str]] = []
         self.logger = logging.getLogger(__name__)
-
+        
         if HAS_OLLAMA:
             self.llm = AsyncClient()
-
+            
     async def process(self, text: str) -> str:
         """Main entry point for user text/transcribed voice."""
         self.history.append({"role": "user", "content": text})
-
+        
         intent = await self.intent_judge.classify(text)
         self.logger.info(f"Classified intent as: {intent.value}")
-
+        
         response_text = ""
-
+        
         if intent == IntentCategory.TOOL_CALL:
             response_text = await self._handle_tool_call(text)
         elif intent == IntentCategory.REFLECTIVE_CHAT:
@@ -77,14 +77,14 @@ class Orchestrator:
             response_text = await self._handle_system_command(text)
         else:
             response_text = await self._handle_conversation(text)
-
+            
         self.history.append({"role": "assistant", "content": response_text})
         return response_text
-
+    
     async def process_input(self, text: str) -> str:
         """Alias for process() for backward compatibility."""
         return await self.process(text)
-
+        
     async def _handle_tool_call(self, text: str) -> str:
         # 1. RAG to find tools
         tools = await self.tool_rag.retrieve_tools(text)
@@ -95,29 +95,29 @@ class Orchestrator:
         # 3. Execute
         results = await self.planner.execute_plan(plan)
         return f"I executed a plan. Results: {results}"
-
+        
     async def _handle_reflective_chat(self, text: str) -> str:
         # Switch to PI-like persona
         system_prompt = "You are Pi, a gentle, reflective, and empathetic AI."
         return await self._generate_response(text, system_prompt)
-
+        
     async def _handle_conversation(self, text: str) -> str:
         # Use active persona
         system_prompt = "You are a helpful AI."
         if self.persona_manager:
             system_prompt = self.persona_manager.get_current_persona().system_prompt
         return await self._generate_response(text, system_prompt)
-
+        
     async def _handle_system_command(self, text: str) -> str:
         return "System command received."
-
+        
     async def _generate_response(self, text: str, system_prompt: str) -> str:
         if not HAS_OLLAMA:
             return "Ollama is not available to generate a response."
-
+        
         messages = [{"role": "system", "content": system_prompt}]
         messages.extend(self.history[-5:])
-
+        
         try:
             # Query installed models dynamically
             models_resp = await self.llm.list()
