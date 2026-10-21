@@ -1,0 +1,29 @@
+directories:
+  cursor: "..\\.cursor"
+  devin: "..\\.devin"
+  antigravity: "..\\.antigravity"
+
+file_patterns:
+  - "*.md"
+  - "*.txt"
+
+exclude_patterns:
+  - "*.tmp"
+  - "*~"
+  - ".gitkeep"
+  - "*.swp"
+  - "*.bak"
+
+backup:
+  enabled: true
+  directory: ".sync_backups"
+  retention_days: 7
+
+logging:
+  directory: ".sync_logs"
+  max_size_mb: 10
+  backup_count: 5
+
+conflict:
+  directory: ".sync_conflicts"
+  auto_open_editor: true

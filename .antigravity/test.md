@@ -1,0 +1,9 @@
+# Test File in .cursor
+
+This is a test file to verify sync functionality.
+Modified to trigger sync event.
+Modified in .devin to test reverse sync.
+Testing bidirectional sync again.
+Testing sync loop fix.
+Final test with shared state.
+Reverse sync test from .devin.
