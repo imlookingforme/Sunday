@@ -1,0 +1,32 @@
+# Sunday Agent Settings
+# Edit these to configure your Sunday instance
+
+llm:
+  provider: "ollama"
+  model: "llama3.2:1b"
+  base_url: "http://localhost:11434"
+  temperature: 0.7
+  max_tokens: 2048
+  timeout: 30
+
+voice:
+  wake_word: "hey_sunday"
+  wake_word_model: "hey_jarvis"
+  stt_model: "base"
+  tts_model: "en_US-lessac-medium"
+  tts_fallback: "edge-tts"
+  sample_rate: 16000
+  channels: 1
+
+memory:
+  db_path: "sunday/data/sunday.db"
+  vector_db_path: "sunday/data/vectors"
+  embedding_model: "all-MiniLM-L6-v2"
+  max_conversation_history: 100
+  memory_retention_days: 365
+
+tools:
+  require_approval: true
+  approval_threshold: "high"
+  max_concurrent_tools: 5
+  tool_timeout: 60

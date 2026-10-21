@@ -1,0 +1,358 @@
+# Sunday Tool Registry Manifest
+# Enable/disable tools, adjust risk levels, configure categories
+
+categories:
+  voice:
+    name: "Voice & Presence"
+    enabled: true
+    tools:
+      - name: wake_listen
+        risk: low
+        enabled: true
+      - name: transcribe_audio
+        risk: low
+        enabled: true
+      - name: speak
+        risk: low
+        enabled: true
+      - name: set_persona
+        risk: low
+        enabled: true
+      - name: stop_speaking
+        risk: low
+        enabled: true
+      - name: dictation_mode
+        risk: medium
+        enabled: true
+      - name: voice_note_capture
+        risk: low
+        enabled: true
+      - name: voiceprint_identify
+        risk: low
+        enabled: false
+      - name: ambient_status
+        risk: low
+        enabled: true
+
+  tasks:
+    name: "Task & Knowledge Management"
+    enabled: true
+    tools:
+      - name: create_task
+        risk: low
+        enabled: true
+      - name: list_tasks
+        risk: low
+        enabled: true
+      - name: complete_task
+        risk: low
+        enabled: true
+      - name: reschedule_task
+        risk: medium
+        enabled: true
+      - name: list_overdue_tasks
+        risk: low
+        enabled: true
+      - name: break_down_task
+        risk: low
+        enabled: true
+      - name: extract_tasks_from_source
+        risk: low
+        enabled: true
+      - name: note_to_task
+        risk: low
+        enabled: true
+      - name: proactive_daily_plan
+        risk: low
+        enabled: true
+      - name: smart_search
+        risk: low
+        enabled: true
+      - name: capture_idea
+        risk: low
+        enabled: true
+      - name: organize_inbox
+        risk: medium
+        enabled: true
+      - name: set_focus_mode
+        risk: low
+        enabled: true
+      - name: get_daily_digest
+        risk: low
+        enabled: true
+      - name: link_task_to_source
+        risk: low
+        enabled: true
+      - name: batch_reschedule
+        risk: medium
+        enabled: true
+
+  memory:
+    name: "Memory & Knowledge"
+    enabled: true
+    tools:
+      - name: remember_fact
+        risk: low
+        enabled: true
+      - name: recall_memory
+        risk: low
+        enabled: true
+      - name: forget_fact
+        risk: medium
+        enabled: true
+      - name: get_conversation_history
+        risk: low
+        enabled: true
+      - name: summarize_session
+        risk: low
+        enabled: true
+      - name: index_document
+        risk: low
+        enabled: true
+      - name: search_documents
+        risk: low
+        enabled: true
+      - name: pin_note
+        risk: low
+        enabled: true
+      - name: journal_entry
+        risk: low
+        enabled: true
+      - name: get_user_profile
+        risk: low
+        enabled: true
+      - name: learn_user_style
+        risk: low
+        enabled: true
+      - name: memory_consolidate
+        risk: medium
+        enabled: true
+
+  writing:
+    name: "Writing & Content"
+    enabled: true
+    tools:
+      - name: draft_content
+        risk: low
+        enabled: true
+      - name: rewrite_text
+        risk: low
+        enabled: true
+      - name: summarize_content
+        risk: low
+        enabled: true
+      - name: expand_content
+        risk: low
+        enabled: true
+      - name: brainstorm
+        risk: low
+        enabled: true
+      - name: draft_email
+        risk: low
+        enabled: true
+      - name: draft_cv
+        risk: low
+        enabled: true
+      - name: interview_prep
+        risk: low
+        enabled: true
+      - name: social_media_plan
+        risk: low
+        enabled: true
+      - name: proofread
+        risk: low
+        enabled: true
+      - name: translate_text
+        risk: low
+        enabled: true
+      - name: meeting_to_actions
+        risk: low
+        enabled: true
+      - name: reflective_chat
+        risk: low
+        enabled: true
+      - name: marketing_strategy
+        risk: low
+        enabled: true
+
+  web:
+    name: "Research & Web"
+    enabled: true
+    tools:
+      - name: web_search
+        risk: low
+        enabled: true
+      - name: fetch_url
+        risk: low
+        enabled: true
+      - name: deep_research
+        risk: low
+        enabled: true
+      - name: analyze_document
+        risk: low
+        enabled: true
+      - name: scrape_page
+        risk: medium
+        enabled: true
+      - name: youtube_transcript
+        risk: low
+        enabled: true
+      - name: arxiv_search
+        risk: low
+        enabled: true
+      - name: wikipedia_lookup
+        risk: low
+        enabled: true
+      - name: news_briefing
+        risk: low
+        enabled: true
+      - name: fact_check
+        risk: low
+        enabled: true
+
+  system:
+    name: "System & Desktop Control"
+    enabled: true
+    tools:
+      - name: run_shell
+        risk: high
+        enabled: true
+      - name: run_shell_sandboxed
+        risk: medium
+        enabled: true
+      - name: read_file
+        risk: low
+        enabled: true
+      - name: write_file
+        risk: medium
+        enabled: true
+      - name: search_files
+        risk: low
+        enabled: true
+      - name: list_directory
+        risk: low
+        enabled: true
+      - name: get_clipboard
+        risk: low
+        enabled: true
+      - name: set_clipboard
+        risk: medium
+        enabled: true
+      - name: open_application
+        risk: medium
+        enabled: true
+      - name: close_application
+        risk: high
+        enabled: true
+      - name: get_active_window
+        risk: low
+        enabled: true
+      - name: switch_window
+        risk: medium
+        enabled: true
+      - name: screenshot_window
+        risk: low
+        enabled: true
+      - name: type_text
+        risk: high
+        enabled: true
+      - name: click_at
+        risk: high
+        enabled: true
+      - name: system_stats
+        risk: low
+        enabled: true
+      - name: set_volume
+        risk: medium
+        enabled: true
+      - name: play_sound_effect
+        risk: low
+        enabled: true
+
+  productivity:
+    name: "Productivity & Communications"
+    enabled: true
+    tools:
+      - name: read_email
+        risk: low
+        enabled: true
+      - name: send_email
+        risk: high
+        enabled: true
+      - name: get_calendar
+        risk: low
+        enabled: true
+      - name: create_event
+        risk: high
+        enabled: true
+      - name: set_reminder
+        risk: low
+        enabled: true
+      - name: morning_briefing
+        risk: low
+        enabled: true
+      - name: send_slack_message
+        risk: high
+        enabled: false
+      - name: send_teams_message
+        risk: high
+        enabled: false
+      - name: send_discord_message
+        risk: high
+        enabled: false
+      - name: notion_query
+        risk: low
+        enabled: false
+      - name: notion_create_page
+        risk: high
+        enabled: false
+      - name: notion_rewrite
+        risk: medium
+        enabled: false
+      - name: notion_update_database
+        risk: medium
+        enabled: false
+      - name: google_docs_read
+        risk: low
+        enabled: false
+      - name: google_docs_write
+        risk: high
+        enabled: false
+      - name: obsidian_search
+        risk: low
+        enabled: true
+
+  scheduling:
+    name: "Scheduling & Proactive"
+    enabled: true
+    tools:
+      - name: schedule_task
+        risk: medium
+        enabled: true
+      - name: cancel_scheduled_task
+        risk: low
+        enabled: true
+      - name: list_scheduled_tasks
+        risk: low
+        enabled: true
+      - name: set_protocol
+        risk: medium
+        enabled: true
+      - name: run_protocol
+        risk: medium
+        enabled: true
+      - name: set_recurring_prompt
+        risk: medium
+        enabled: true
+      - name: monitor_inbox
+        risk: medium
+        enabled: true
+      - name: monitor_calendar
+        risk: low
+        enabled: true
+      - name: health_check
+        risk: low
+        enabled: true
+      - name: proactive_nudge
+        risk: low
+        enabled: true

@@ -1,0 +1,175 @@
+# Specialist Operator Configuration for Sunday
+# Each operator has a least-privilege tool slice and dedicated memory namespace
+
+operators:
+  conversation:
+    name: "Conversation Operator"
+    description: "Natural dialogue and emotional support"
+    allowed_tools:
+      - "reflective_chat"
+      - "brainstorm"
+      - "draft_content"
+      - "rewrite_text"
+    memory_namespace: "conversation"
+    persona: "sunday"
+    priority: 1
+
+  research:
+    name: "Research Operator"
+    description: "Thorough, methodical, citation-focused research"
+    allowed_tools:
+      - "web_search"
+      - "deep_research"
+      - "fetch_url"
+      - "summarize_webpage"
+      - "citation_search"
+      - "fact_check"
+      - "academic_search"
+      - "news_search"
+      - "compare_sources"
+      - "save_reference"
+    memory_namespace: "research"
+    persona: "jarvis"
+    priority: 2
+
+  automation:
+    name: "Automation Operator"
+    description: "Execute tasks efficiently and safely"
+    allowed_tools:
+      - "create_task"
+      - "list_tasks"
+      - "complete_task"
+      - "reschedule_task"
+      - "break_down_task"
+      - "note_to_task"
+      - "proactive_daily_plan"
+      - "set_reminder"
+      - "create_event"
+      - "get_calendar"
+    memory_namespace: "automation"
+    persona: "friday"
+    priority: 3
+
+  device_control:
+    name: "Device Control Operator"
+    description: "Smart home and device management"
+    allowed_tools:
+      - "control_light"
+      - "control_thermostat"
+      - "control_smart_plug"
+      - "control_lock"
+      - "control_camera"
+      - "home_status"
+      - "create_scene"
+      - "trigger_scene"
+      - "home_security_status"
+      - "monitor_energy"
+    memory_namespace: "device_control"
+    persona: "sunday"
+    priority: 4
+
+  alerting:
+    name: "Alerting Operator"
+    description: "Notifications and proactive nudges"
+    allowed_tools:
+      - "set_reminder"
+      - "create_event"
+      - "get_calendar"
+      - "morning_briefing"
+      - "proactive_daily_plan"
+      - "get_daily_digest"
+      - "organize_inbox"
+      - "set_focus_mode"
+    memory_namespace: "alerting"
+    persona: "sunday"
+    priority: 5
+
+  security:
+    name: "Security Operator"
+    description: "Security lockdown and audit"
+    allowed_tools:
+      - "home_security_status"
+      - "control_lock"
+      - "control_camera"
+      - "monitor_energy"
+      - "system_status"
+      - "audit_log"
+    memory_namespace: "security"
+    persona: "jarvis"
+    priority: 6
+
+  writing:
+    name: "Writing Operator"
+    description: "Content creation and editing"
+    allowed_tools:
+      - "draft_content"
+      - "rewrite_text"
+      - "summarize_content"
+      - "expand_content"
+      - "brainstorm"
+      - "draft_email"
+      - "draft_cv"
+      - "interview_prep"
+      - "social_media_plan"
+      - "proofread"
+      - "translate_text"
+      - "meeting_to_actions"
+      - "marketing_strategy"
+    memory_namespace: "writing"
+    persona: "sunday"
+    priority: 7
+
+  coding:
+    name: "Coding Operator"
+    description: "Code analysis and generation"
+    allowed_tools:
+      - "explain_codebase"
+      - "code_suggest"
+      - "debug_error"
+      - "generate_code"
+      - "refactor_code"
+      - "write_tests"
+      - "code_review"
+      - "lint_code"
+      - "find_bug"
+      - "optimize_code"
+    memory_namespace: "coding"
+    persona: "jarvis"
+    priority: 8
+
+# Intent classification rules
+intent_mapping:
+  conversation:
+    keywords: ["chat", "talk", "discuss", "tell me", "how are you", "reflect"]
+    default_operator: "conversation"
+
+  research:
+    keywords: ["search", "find", "research", "look up", "what is", "who is", "when was"]
+    default_operator: "research"
+
+  automation:
+    keywords: ["do", "execute", "run", "schedule", "remind", "task", "todo"]
+    default_operator: "automation"
+
+  device_control:
+    keywords: ["turn on", "turn off", "light", "thermostat", "lock", "unlock", "home"]
+    default_operator: "device_control"
+
+  alerting:
+    keywords: ["remind", "notify", "alert", "nudge", "briefing", "digest"]
+    default_operator: "alerting"
+
+  security:
+    keywords: ["security", "lockdown", "audit", "secure", "protect"]
+    default_operator: "security"
+
+  writing:
+    keywords: ["write", "draft", "edit", "summarize", "expand", "email", "post"]
+    default_operator: "writing"
+
+  coding:
+    keywords: ["code", "debug", "fix", "implement", "function", "class", "python"]
+    default_operator: "coding"
+
+# Default operator for unclassified intents
+default_operator: "conversation"

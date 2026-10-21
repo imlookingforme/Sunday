@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sunday Sidecar HUD - Senpai Forest</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    body {
+      background: transparent;
+      color: #ffffff;
+      overflow: hidden;
+      user-select: none;
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-start;
+      height: 100vh;
+      padding: 16px;
+    }
+    .hud-card {
+      width: 280px;
+      background: rgba(15, 17, 26, 0.82);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 183, 197, 0.28);
+      border-radius: 16px;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5), 0 0 24px rgba(255, 183, 197, 0.15);
+      padding: 16px;
+      animation: pulseIn 0.5s ease-out;
+    }
+    @keyframes pulseIn {
+      from { opacity: 0; transform: translateY(-12px) scale(0.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .hud-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 8px;
+    }
+    .hud-title {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      color: #ffb7c5;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .status-badge {
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 10px;
+      font-weight: 600;
+      background: rgba(0, 255, 136, 0.15);
+      color: #00ff88;
+      border: 1px solid rgba(0, 255, 136, 0.3);
+    }
+    .status-badge.wilted {
+      background: rgba(255, 68, 68, 0.15);
+      color: #ff4444;
+      border-color: rgba(255, 68, 68, 0.3);
+    }
+    .tree-stage-visual {
+      height: 120px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      margin: 8px 0;
+    }
+    .tree-icon {
+      font-size: 48px;
+      filter: drop-shadow(0 0 16px rgba(255, 183, 197, 0.6));
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .tree-icon.growing {
+      animation: floatBreath 3s infinite ease-in-out;
+    }
+    @keyframes floatBreath {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-4px) scale(1.06); }
+    }
+    .progress-bar-container {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 8px 0;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      width: 42%;
+      background: linear-gradient(90deg, #ffb7c5, #00ff88);
+      border-radius: 4px;
+      transition: width 0.3s ease;
+      box-shadow: 0 0 12px rgba(0, 255, 136, 0.5);
+    }
+    .timer-display {
+      text-align: center;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: #ffffff;
+      font-variant-numeric: tabular-nums;
+      margin-top: 4px;
+    }
+    .senpai-whisper {
+      font-size: 11px;
+      font-style: italic;
+      color: rgba(255, 255, 255, 0.75);
+      text-align: center;
+      margin-top: 10px;
+      line-height: 1.4;
+      padding: 6px 10px;
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 8px;
+    }
+    .btn-action {
+      width: 100%;
+      margin-top: 12px;
+      padding: 8px;
+      background: rgba(255, 183, 197, 0.2);
+      border: 1px solid #ffb7c5;
+      color: #ffb7c5;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-action:hover {
+      background: #ffb7c5;
+      color: #0f111a;
+      box-shadow: 0 0 16px rgba(255, 183, 197, 0.4);
+    }
+  </style>
+</head>
+<body>
+  <div class="hud-card">
+    <div class="hud-header">
+      <div class="hud-title">🌸 Senpai Focus</div>
+      <div id="statusBadge" class="status-badge">GROWING</div>
+    </div>
+
+    <div class="tree-stage-visual">
+      <div id="treeIcon" class="tree-icon growing">🌸</div>
+    </div>
+
+    <div class="progress-bar-container">
+      <div id="progressFill" class="progress-bar-fill" style="width: 0%;"></div>
+    </div>
+
+    <div id="timerDisplay" class="timer-display">25:00</div>
+    <div id="senpaiWhisper" class="senpai-whisper">"Stay locked in. Our sakura blossom is taking root."</div>
+
+    <button id="btnSprint" class="btn-action" onclick="toggleSprint()">Plant Focus Tree (25m)</button>
+  </div>
+
+  <script>
+    let isGrowing = false;
+    let remainingSeconds = 1500;
+    let timerInterval = null;
+
+    async function fetchStatus() {
+      try {
+        const res = await fetch('/api/forest/status');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.active) {
+            updateHUD(data);
+          }
+        }
+      } catch (e) {
+        // standalone mode fallback
+      }
+    }
+
+    function updateHUD(data) {
+      document.getElementById('progressFill').style.width = data.growth_percentage + '%';
+      const mins = Math.floor(data.remaining_seconds / 60);
+      const secs = Math.floor(data.remaining_seconds % 60);
+      document.getElementById('timerDisplay').innerText =
+        String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+    }
+
+    async function toggleSprint() {
+      try {
+        const res = await fetch('/api/forest/start', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ duration_minutes: 25, tag: "Academic Sprint" })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          document.getElementById('btnSprint').innerText = 'Sprint Active';
+          document.getElementById('senpaiWhisper').innerText = '"Focus on the concept. Senpai is watching over you."';
+        }
+      } catch (e) {
+        alert("Started local offline focus sprint!");
+      }
+    }
+
+    setInterval(fetchStatus, 3000);
+  </script>
+</body>
+</html>
