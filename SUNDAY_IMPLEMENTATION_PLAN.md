@@ -1,0 +1,85 @@
+# Sunday Implementation & Feasibility Plan
+
+## Hardware Assessment: HP Pavilion i7 (16GB RAM, No Dedicated GPU, 1TB External HDD)
+
+*   **CPU:** The i7 processor is capable of handling standard web requests, API routing, lightweight embedding models, and local text-to-speech without issue.
+*   **RAM:** 16GB is sufficient to hold the OS, background tasks, and a deeply quantized local language model (e.g., a 4-bit quantized Phi-3 or Llama-3 8B) for offline fallback.
+*   **GPU:** *No dedicated GPU.* This means running complex AI (like image generation, unquantized large language models, or highly complex real-time speech-to-text models like Whisper Large) locally will be impractically slow.
+*   **Storage:** The 1TB external HDD will act as the "brain drive." It has ample space for vector databases, SQLite logs, model weights, and the Sunday codebase itself.
+
+### Strategic Architecture: Cloud-Primary / Local-Fallback
+To maximize productivity while remaining hardware compliant:
+1.  **Primary Engine (Cloud):** Sunday will route heavy intelligence tasks (coding, academic tutoring, complex reasoning) to Cloud APIs (OpenAI/Anthropic). This bypasses the local GPU constraint entirely and provides instant, high-quality responses.
+2.  **Fallback Engine (Local):** If internet is unavailable, Sunday will fallback to a small, heavily quantized model running on the CPU via Ollama (e.g., `phi3:mini`). Responses will be slower and less complex, but functional.
+3.  **Local "Reflexes" (CPU):** Wake word detection (`openWakeWord`), Text-to-Speech (`piper-tts`), and Vector Embeddings (`all-MiniLM-L6-v2`) are lightweight enough to run smoothly on the i7 CPU.
+
+---
+
+## Feature Roadmap & Implementation Details
+
+### Phase 1: USB Auto-Trigger & Storage Sandbox (Foundation)
+**Goal:** Create a plug-and-play experience where connecting the 1TB drive instantly launches Sunday, with zero data footprint left on the host laptop.
+
+*   **Implementation:**
+    1.  Create a lightweight Windows daemon (e.g., a simple C# or PowerShell background process) that runs invisibly on the host laptop.
+    2.  The daemon polls for USB connection events. When it detects the specific Volume ID of the 1TB drive, it executes a bootstrap script located on the drive (`E:\launch_sunday.bat`).
+    3.  The bootstrap script dynamically sets environment variables (e.g., `HF_HOME`, `OLLAMA_MODELS`, database paths) to point to directories *within* the external drive.
+*   **Rigid Verification Check:**
+    *   *Test:* Connect the USB drive. Verify the Sunday process starts automatically.
+    *   *Check:* Disconnect the drive. Verify no Sunday cache files, database logs, or model weights exist on the laptop's `C:\` drive.
+
+### Phase 2: Biometric Voice Pipeline
+**Goal:** Implement continuous listening with speaker recognition to provide a personalized, voice-first interface.
+
+*   **Implementation:**
+    1.  Integrate `openWakeWord` to listen for "Hey Sunday" (runs on CPU).
+    2.  Pass audio to a lightweight speaker verification model (e.g., SpeechBrain's CPU-friendly embedding models) to generate a voice print.
+    3.  Compare the voice print against a stored profile. If it matches, accept the command; otherwise, reject or adapt the persona.
+    4.  Route transcription to Cloud Whisper (for speed) or local `faster-whisper` (base model, for offline).
+*   **Rigid Verification Check:**
+    *   *Test:* Have the primary user speak "Hey Sunday", then have a different person speak it.
+    *   *Check:* Verify the system accurately identifies the primary user and logs an authorization event.
+
+### Phase 3: The "Sentience" & Insomnia Engine
+**Goal:** Enable Sunday to run 24/7, self-reflect on interactions, and update its memory and code autonomously.
+
+*   **Implementation:**
+    1.  Utilize Windows `SetThreadExecutionState` to prevent the laptop from sleeping when the lid is closed (Insomnia mode).
+    2.  Implement a background cron job. During idle periods (e.g., 3:00 AM), Sunday will wake up, review the day's SQLite memory logs, and extract key facts/preferences into the Vector Database (Titans Memory).
+    3.  *Self-Reflection:* Sunday will occasionally review its own error logs. Using a Tree-of-Thought cloud prompt, it will attempt to write a patch for its own code, test it in a sandbox, and commit it if successful.
+*   **Rigid Verification Check:**
+    *   *Test:* Close the laptop lid. Send a Telegram message to Sunday.
+    *   *Check:* Verify Sunday responds while the lid is closed. Review memory logs to ensure the nightly background summarization task executed successfully.
+
+### Phase 4: IDE Management & Autonomous Sub-Agents
+**Goal:** Automate coding workflows, handle account switching, and allow Sunday to spin up workers.
+
+*   **Implementation:**
+    1.  Enhance the `UniversalController` to integrate with the command-line interfaces of preferred IDEs (VS Code/Cursor).
+    2.  Create a "Credential Manager" tool. If Sunday hits an API limit (e.g., a 429 error), it automatically swaps the API key or triggers an account switch script (e.g., updating GitHub CLI auth).
+    3.  Implement a `SubAgent` class. Sunday can write a Python script, spawn it as a background process, and monitor its output asynchronously (e.g., "Sunday, write a script to scrape this website every hour").
+*   **Rigid Verification Check:**
+    *   *Test:* Instruct Sunday to create a sub-agent that prints the time every minute.
+    *   *Check:* Verify the script is generated, executed, and the output is successfully captured in the logs.
+
+### Phase 5: Academic Tutor & Distraction Minimizer
+**Goal:** Create a focused study environment (Senpai Mode) with proactive interventions.
+
+*   **Implementation:**
+    1.  Implement the `FocusSentry` sidecar using Windows APIs to poll the active window title.
+    2.  If the user opens a distracting application (e.g., YouTube) during a focus session, trigger a 3-stage escalation: (1) Voice warning, (2) Screen overlay, (3) Force minimize the window.
+    3.  Integrate the Cloud LLM to act as a Socratic tutor, helping write research papers by querying arXiv and summarizing findings.
+*   **Rigid Verification Check:**
+    *   *Test:* Start a focus session. Open a known distracting website.
+    *   *Check:* Verify the 3-stage escalation triggers accurately and the window is minimized.
+
+### Phase 6: Phone Connectivity & Dashboard
+**Goal:** Remote control and notifications via mobile.
+
+*   **Implementation:**
+    1.  Deploy a Telegram bot integrated directly into the `SwarmBus`. This allows sending text/voice notes to Sunday from the phone.
+    2.  Serve the FastAPI web dashboard. Use Cloudflare Tunnels (or similar) to securely expose the local port 8000 to the internet, allowing access to the UI from the phone.
+*   **Rigid Verification Check:**
+    *   *Test:* Send a command via Telegram from the phone.
+    *   *Check:* Verify the command executes on the laptop and the response is sent back to the phone.
+
