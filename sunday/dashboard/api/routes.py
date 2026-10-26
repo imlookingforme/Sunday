@@ -479,3 +479,21 @@ async def analyze_mood(req: MoodRequest):
     """Detect conversational mood and frustration for persona modulation."""
     return mood_detector.detect_mood(req.text)
 
+
+# === Mission Control 2.0 API Endpoints ===
+from sunday.dashboard.mission_control.service import MissionControlService
+mission_control_service = MissionControlService()
+
+@router.get("/mission-control/pipeline")
+async def get_mission_pipeline():
+    return await mission_control_service.get_task_pipeline_summary()
+
+@router.get("/mission-control/agents")
+async def get_mission_agents():
+    return await mission_control_service.get_agent_inspector_data()
+
+@router.post("/mission-control/intervene")
+async def post_mission_intervention(payload: dict):
+    action = payload.get("action")
+    task_id = payload.get("task_id")
+    return await mission_control_service.handle_user_intervention(action, task_id, payload)

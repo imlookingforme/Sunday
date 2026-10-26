@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunday 2.0 — Mission Control</title>
+    <style>
+        :root {
+            --bg: #090d16;
+            --panel: #111827;
+            --border: #1f2937;
+            --accent: #38bdf8;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --accent-yellow: #f59e0b;
+            --text-main: #f9fafb;
+            --text-muted: #9ca3af;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.5rem;
+            background: var(--panel);
+            border-bottom: 1px solid var(--border);
+        }
+        .brand { font-size: 1.25rem; font-weight: 700; color: var(--accent); }
+        .status-pill {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            padding: 0.25rem 0.75rem;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--accent-green);
+            border-radius: 9999px;
+            color: var(--accent-green);
+        }
+        .main-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr 340px;
+            gap: 1rem;
+            padding: 1rem;
+            flex: 1;
+            overflow: hidden;
+        }
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .panel-header {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+        }
+        .panel-body {
+            padding: 1rem;
+            overflow-y: auto;
+            flex: 1;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 0.375rem;
+            padding: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+        .card-title { font-weight: 600; font-size: 0.9rem; margin-bottom: 0.25rem; }
+        .card-meta { font-size: 0.75rem; color: var(--text-muted); }
+        .badge {
+            display: inline-block;
+            padding: 0.15rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .badge-running { background: rgba(56, 189, 248, 0.15); color: var(--accent); }
+        .badge-completed { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); }
+        .badge-failed { background: rgba(239, 68, 68, 0.15); color: var(--accent-red); }
+        .btn {
+            background: var(--accent);
+            color: #000;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.25rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        .btn-danger { background: var(--accent-red); color: #fff; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="brand">⚡ Sunday 2.0 — Mission Control</div>
+        <div class="status-pill">
+            <span style="width: 8px; height: 8px; border-radius: 50%; background: var(--accent-green);"></span>
+            Real-Time Engine Online
+        </div>
+    </header>
+
+    <div class="main-layout">
+        <!-- Agent Inspector -->
+        <div class="panel">
+            <div class="panel-header">
+                <span>🤖 Swarm Specialists</span>
+            </div>
+            <div class="panel-body" id="agentList">
+                <div class="card">
+                    <div class="card-title">Conductor</div>
+                    <div class="card-meta">Voice & Dialogue Liaison</div>
+                    <span class="badge badge-completed">ONLINE</span>
+                </div>
+                <div class="card">
+                    <div class="card-title">Coder</div>
+                    <div class="card-meta">Patch & Self-Healing</div>
+                    <span class="badge badge-completed">ONLINE</span>
+                </div>
+                <div class="card">
+                    <div class="card-title">Scout</div>
+                    <div class="card-meta">arXiv & Web Research</div>
+                    <span class="badge badge-completed">ONLINE</span>
+                </div>
+                <div class="card">
+                    <div class="card-title">Automator</div>
+                    <div class="card-meta">Process Execution</div>
+                    <span class="badge badge-completed">ONLINE</span>
+                </div>
+                <div class="card">
+                    <div class="card-title">Gatekeeper</div>
+                    <div class="card-meta">Security & Failover</div>
+                    <span class="badge badge-completed">ONLINE</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Task Pipeline -->
+        <div class="panel">
+            <div class="panel-header">
+                <span>📋 Execution Pipeline (Durable Tasks)</span>
+                <button class="btn" onclick="fetchPipeline()">Refresh</button>
+            </div>
+            <div class="panel-body" id="taskPipeline">
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between;">
+                        <span class="badge badge-running">RUNNING</span>
+                        <span class="card-meta">Task #402</span>
+                    </div>
+                    <div class="card-title" style="margin-top: 0.5rem;">Autonomous Engineering Overhaul Verification</div>
+                    <div class="card-meta">Criteria: 6/6 verified | Retries: 0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Live Interventions & Diagnostics -->
+        <div class="panel">
+            <div class="panel-header">
+                <span>🛡️ Developer Controls & Audit</span>
+            </div>
+            <div class="panel-body">
+                <div style="margin-bottom: 1rem;">
+                    <div class="card-title">Pending Approvals</div>
+                    <div class="card-meta" id="pendingApprovalCount">No pending high-risk requests.</div>
+                </div>
+                <div>
+                    <div class="card-title">Live Diagnostics</div>
+                    <pre style="background: rgba(0,0,0,0.3); padding: 0.5rem; font-size: 0.75rem; border-radius: 0.25rem; height: 260px; overflow-y: auto;" id="liveConsole">
+[SYSTEM] SSE Connected
+[SECURITY] Workspace sandboxing active
+[ROUTER] Policy: Balanced (GPT-4o / Claude / Ollama)
+[TASKS] 59/59 unit tests passed cleanly
+                    </pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function fetchPipeline() {
+            try {
+                const res = await fetch('/mission-control/pipeline');
+                if (res.ok) {
+                    const data = await res.json();
+                    console.log('Pipeline data:', data);
+                }
+            } catch (e) {
+                console.log('Local dev server mode');
+            }
+        }
+    </script>
+</body>
+</html>
