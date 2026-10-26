@@ -4,3 +4,5 @@ from .task_store import TaskStore
 from .knowledge_graph import KnowledgeGraph
 
 __all__ = ["SQLiteStore", "VectorStore", "TaskStore", "KnowledgeGraph"]
+
+from .categorized_memory import CategorizedMemoryStore, MemoryCategory, MemoryRecord, CorrectionScope
