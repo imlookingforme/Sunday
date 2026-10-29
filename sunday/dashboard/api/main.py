@@ -238,18 +238,23 @@ async def execute_tool(request: ToolExecutionRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
+def _get_memory_data():
+    return {
+        "total_episodes": 0,
+        "avg_surprise": 0.0,
+        "high_surprise_count": 0
+    }
+
 @app.get("/api/memory/stats")
 async def get_memory_stats():
     """Get memory statistics."""
     try:
         # Placeholder - would use actual memory system
-        return {
-            "total_episodes": 0,
-            "avg_surprise": 0.0,
-            "high_surprise_count": 0
-        }
+        return _get_memory_data()
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @app.get("/api/tasks")
 async def get_tasks(status: Optional[str] = None):

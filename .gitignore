@@ -1,0 +1,9 @@
+build/
+__pycache__/
+*.pyc
+*.pyo
+patch.py
+patch_main.py
+
+__pycache__/
+*.py[cod]
