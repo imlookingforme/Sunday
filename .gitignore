@@ -1,3 +1,2 @@
-__pycache__/
-*.pyc
-test_audit.log
+*__pycache__*
+*.db
