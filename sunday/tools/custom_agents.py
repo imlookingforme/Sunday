@@ -5,11 +5,14 @@ import yaml
 import uuid
 import aiofiles
 import logging
-from typing import Any, Dict, List, Optional
 from pathlib import Path
+from typing import Any
 
-from .registry import tool, ToolResult, ToolRisk
+import yaml
+
 from sunday.memory.sqlite_store import SQLiteStore
+
+from .registry import ToolResult, ToolRisk, tool
 
 logger = logging.getLogger(__name__)
 
@@ -27,9 +30,9 @@ async def create_custom_agent(
     name: str,
     system_prompt: str,
     description: str = "",
-    allowed_tools: Optional[List[str]] = None,
+    allowed_tools: list[str] | None = None,
     model: str = "llama3.1",
-    config: Optional[Dict[str, Any]] = None,
+    config: dict[str, Any] | None = None,
 ) -> ToolResult:
     """Create and persist a custom agent."""
     try:
@@ -77,7 +80,7 @@ async def create_custom_agent(
 async def run_custom_agent(
     agent_name_or_id: str,
     task: str,
-    context: Optional[Dict[str, Any]] = None,
+    context: dict[str, Any] | None = None,
 ) -> ToolResult:
     """Execute a task using a custom agent's scoped persona and tools."""
     try:
@@ -143,7 +146,7 @@ async def delete_custom_agent(agent_name_or_id: str) -> ToolResult:
     description="Export a custom agent definition to a declarative YAML file",
     required_args=["agent_name_or_id"],
 )
-async def export_custom_agent(agent_name_or_id: str, file_path: Optional[str] = None) -> ToolResult:
+async def export_custom_agent(agent_name_or_id: str, file_path: str | None = None) -> ToolResult:
     """Export custom agent to YAML file."""
     try:
         agent = await store.get_custom_agent(agent_name_or_id)
@@ -159,7 +162,6 @@ async def export_custom_agent(agent_name_or_id: str, file_path: Optional[str] = 
 
         async with aiofiles.open(target_path, "w", encoding="utf-8") as f:
             await f.write(yaml.dump(agent, default_flow_style=False))
-
         return ToolResult(
             success=True, data={"file_path": str(target_path), "agent": agent["name"]}
         )
