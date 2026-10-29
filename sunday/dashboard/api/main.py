@@ -34,7 +34,7 @@ except ImportError:
             for key, value in kwargs.items():
                 setattr(self, key, value)
 
-from typing import Optional, List, Dict, Any
+from typing import Optional, Dict, Any
 from .sse import sse_event_generator
 from .routes import router as additional_routes
 import asyncio
