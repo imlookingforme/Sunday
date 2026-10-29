@@ -1,14 +1,16 @@
 """Custom Agent Builder tools for defining and running specialist agents."""
 
-import os
-import yaml
-import uuid
 import logging
-from typing import Any, Dict, List, Optional
+import os
+import uuid
 from pathlib import Path
+from typing import Any
 
-from .registry import tool, ToolResult, ToolRisk
+import yaml
+
 from sunday.memory.sqlite_store import SQLiteStore
+
+from .registry import ToolResult, ToolRisk, tool
 
 logger = logging.getLogger(__name__)
 
@@ -26,9 +28,9 @@ async def create_custom_agent(
     name: str,
     system_prompt: str,
     description: str = "",
-    allowed_tools: Optional[List[str]] = None,
+    allowed_tools: list[str] | None = None,
     model: str = "llama3.1",
-    config: Optional[Dict[str, Any]] = None,
+    config: dict[str, Any] | None = None,
 ) -> ToolResult:
     """Create and persist a custom agent."""
     try:
@@ -44,14 +46,16 @@ async def create_custom_agent(
             "config": config or {},
         }
         await store.save_custom_agent(agent_data)
-        
+
         # Also auto-export declarative YAML
         export_dir = Path("sunday/data/agents")
         export_dir.mkdir(parents=True, exist_ok=True)
         yaml_file = export_dir / f"{name.lower().replace(' ', '_')}.yaml"
-        with open(yaml_file, "w", encoding="utf-8") as f:
-            yaml.dump(agent_data, f, default_flow_style=False)
-            
+        import aiofiles
+
+        async with aiofiles.open(yaml_file, "w", encoding="utf-8") as f:
+            await f.write(yaml.dump(agent_data, default_flow_style=False))
+
         return ToolResult(
             success=True,
             data={
@@ -76,7 +80,7 @@ async def create_custom_agent(
 async def run_custom_agent(
     agent_name_or_id: str,
     task: str,
-    context: Optional[Dict[str, Any]] = None,
+    context: dict[str, Any] | None = None,
 ) -> ToolResult:
     """Execute a task using a custom agent's scoped persona and tools."""
     try:
@@ -142,20 +146,28 @@ async def delete_custom_agent(agent_name_or_id: str) -> ToolResult:
     description="Export a custom agent definition to a declarative YAML file",
     required_args=["agent_name_or_id"],
 )
-async def export_custom_agent(agent_name_or_id: str, file_path: Optional[str] = None) -> ToolResult:
+async def export_custom_agent(agent_name_or_id: str, file_path: str | None = None) -> ToolResult:
     """Export custom agent to YAML file."""
     try:
         agent = await store.get_custom_agent(agent_name_or_id)
         if not agent:
             return ToolResult(success=False, error=f"Agent '{agent_name_or_id}' not found.")
 
-        target_path = Path(file_path) if file_path else Path(f"sunday/data/agents/{agent['name'].lower().replace(' ', '_')}.yaml")
+        target_path = (
+            Path(file_path)
+            if file_path
+            else Path(f"sunday/data/agents/{agent['name'].lower().replace(' ', '_')}.yaml")
+        )
         target_path.parent.mkdir(parents=True, exist_ok=True)
 
-        with open(target_path, "w", encoding="utf-8") as f:
-            yaml.dump(agent, f, default_flow_style=False)
+        import aiofiles
 
-        return ToolResult(success=True, data={"file_path": str(target_path), "agent": agent["name"]})
+        async with aiofiles.open(target_path, "w", encoding="utf-8") as f:
+            await f.write(yaml.dump(agent, default_flow_style=False))
+
+        return ToolResult(
+            success=True, data={"file_path": str(target_path), "agent": agent["name"]}
+        )
     except Exception as e:
         return ToolResult(success=False, error=str(e))
 
@@ -171,18 +183,26 @@ async def import_custom_agent(yaml_path_or_content: str) -> ToolResult:
     """Import and register a custom agent from YAML."""
     try:
         if os.path.exists(yaml_path_or_content):
-            with open(yaml_path_or_content, "r", encoding="utf-8") as f:
-                data = yaml.safe_load(f)
+            import aiofiles
+
+            async with aiofiles.open(yaml_path_or_content, encoding="utf-8") as f:
+                content = await f.read()
+                data = yaml.safe_load(content)
         else:
             data = yaml.safe_load(yaml_path_or_content)
 
         if not isinstance(data, dict) or "name" not in data or "system_prompt" not in data:
-            return ToolResult(success=False, error="Invalid agent YAML format. Must contain 'name' and 'system_prompt'.")
+            return ToolResult(
+                success=False,
+                error="Invalid agent YAML format. Must contain 'name' and 'system_prompt'.",
+            )
 
         if "id" not in data:
             data["id"] = f"agent_{uuid.uuid4().hex[:8]}"
 
         await store.save_custom_agent(data)
-        return ToolResult(success=True, data={"agent_id": data["id"], "name": data["name"], "imported": True})
+        return ToolResult(
+            success=True, data={"agent_id": data["id"], "name": data["name"], "imported": True}
+        )
     except Exception as e:
         return ToolResult(success=False, error=str(e))
