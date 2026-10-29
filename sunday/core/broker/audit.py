@@ -102,8 +102,10 @@ class AuditLedger:
     
     async def _append_entry(self, entry: AuditEntry) -> None:
         """Append entry to log file."""
-        with open(self.log_path, "a", encoding="utf-8") as f:
-            f.write(json.dumps(asdict(entry), default=str) + "\n")
+        def _write():
+            with open(self.log_path, "a", encoding="utf-8") as f:
+                f.write(json.dumps(asdict(entry), default=str) + "\n")
+        await asyncio.to_thread(_write)
     
     async def verify_integrity(self) -> bool:
         """Verify the hash chain integrity of the ledger."""
