@@ -182,7 +182,7 @@ async def chat(request: ChatRequest):
         response = f"Response to: {request.message}"
         return {"message": response, "persona": request.persona}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=e.status_code, detail=e.detail) if isinstance(e, HTTPException) else HTTPException(status_code=500, detail=str(e))
 
 @app.get("/api/tools")
 async def list_tools():
@@ -236,7 +236,7 @@ async def execute_tool(request: ToolExecutionRequest):
             "error": result.error
         }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=e.status_code, detail=e.detail) if isinstance(e, HTTPException) else HTTPException(status_code=500, detail=str(e))
 
 @app.get("/api/memory/stats")
 async def get_memory_stats():
@@ -249,7 +249,7 @@ async def get_memory_stats():
             "high_surprise_count": 0
         }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=e.status_code, detail=e.detail) if isinstance(e, HTTPException) else HTTPException(status_code=500, detail=str(e))
 
 @app.get("/api/tasks")
 async def get_tasks(status: Optional[str] = None):
@@ -258,4 +258,4 @@ async def get_tasks(status: Optional[str] = None):
         # Placeholder - would use actual task store
         return {"tasks": [], "count": 0}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=e.status_code, detail=e.detail) if isinstance(e, HTTPException) else HTTPException(status_code=500, detail=str(e))
