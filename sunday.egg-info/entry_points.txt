@@ -1,2 +1,0 @@
-[console_scripts]
-sunday = sunday.daemon.pipeline:main
